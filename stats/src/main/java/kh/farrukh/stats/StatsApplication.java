@@ -2,8 +2,10 @@ package kh.farrukh.stats;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
+@EnableEurekaClient
 public class StatsApplication {
 
     // TODO: 8/18/22 connect to other services (bill)
