@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 import static kh.farrukh.stats.Constants.TABLE_NAME_STATS;
@@ -25,17 +24,17 @@ public class Stats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     @JsonProperty("start_date")
     private LocalDate startDate;
 
     @JsonProperty("end_date")
     private LocalDate endDate;
 
-    @NotNull
+    @Column(nullable = false)
     private Double amount;
 
-    @NotNull
+    @Column(nullable = false)
     @JsonProperty("total_price")
     private Double totalPrice;
 
