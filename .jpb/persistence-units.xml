@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit name="Default">
+      <persistence-unit name="Default" defaultSearchScope="Project">
         <packages>
           <package value="kh.farrukh.bill" />
         </packages>
