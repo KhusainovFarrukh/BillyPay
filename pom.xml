@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>bill</module>
+        <module>stats</module>
     </modules>
 
     <name>BillyPay</name>
