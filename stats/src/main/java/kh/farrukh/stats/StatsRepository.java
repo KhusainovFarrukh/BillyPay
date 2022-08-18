@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface StatsRepository extends JpaRepository<Stats, Long> {
 
     Page<Stats> findAllByBillId(long billId, Pageable pageable);
+
+    void deleteAllByBillId(long billId);
 }

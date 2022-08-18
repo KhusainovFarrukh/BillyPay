@@ -17,4 +17,6 @@ public interface StatsService {
     Stats updateStats(long id, StatsDTO statsDTO);
 
     void deleteStatsById(long id);
+
+    void deleteStatsByBillId(long billId);
 }

@@ -6,6 +6,7 @@ import kh.farrukh.stats.utils.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -116,6 +117,12 @@ public class StatsServiceImpl implements StatsService {
 //        }
         deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
         statsRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStatsByBillId(long billId) {
+        statsRepository.deleteAllByBillId(billId);
     }
 
     private Bill getBill(Long billId) {

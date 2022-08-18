@@ -49,4 +49,10 @@ public class StatsController {
         statsService.deleteStatsById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteStatsByBillId(@RequestParam("bill_id") long billId) {
+        statsService.deleteStatsByBillId(billId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -107,7 +107,7 @@ public class BillServiceImpl implements BillService {
 //            throw new NotEnoughPermissionException();
 //        }
 
-        // TODO: 8/18/22 delete all stats connected to this bill
+        deleteAllStatsOfBill(id);
 
         billRepository.deleteById(id);
     }
@@ -145,7 +145,7 @@ public class BillServiceImpl implements BillService {
     private Stats getStats(long statsId) {
         try {
             Stats stats = restTemplate.getForObject(
-                    "http://BILL/api/v1/bills/{billId}",
+                    "http://STATS/api/v1/stats/{statsId}",
                     Stats.class,
                     statsId
             );
@@ -157,5 +157,12 @@ public class BillServiceImpl implements BillService {
             e.printStackTrace();
             throw new ResourceNotFoundException("Stats", "id", statsId);
         }
+    }
+
+    private void deleteAllStatsOfBill(long billId) {
+        restTemplate.delete(
+                "http://STATS/api/v1/stats?bill_id={billId}",
+                billId
+        );
     }
 }
