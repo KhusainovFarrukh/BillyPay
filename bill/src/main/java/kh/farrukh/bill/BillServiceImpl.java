@@ -6,6 +6,10 @@ import kh.farrukh.bill.utils.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 import static kh.farrukh.bill.utils.checkers.Checkers.checkPageNumber;
 
@@ -14,6 +18,7 @@ import static kh.farrukh.bill.utils.checkers.Checkers.checkPageNumber;
 public class BillServiceImpl implements BillService {
 
     private final BillRepository billRepository;
+    private final RestTemplate restTemplate;
 //    private final UserRepository userRepository;
 
     @Override
@@ -23,6 +28,7 @@ public class BillServiceImpl implements BillService {
             int pageSize
     ) {
         checkPageNumber(page);
+        // TODO: 8/18/22 check user
 //        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
         return new PagingResponse<>(billRepository.findAll(
                 PageRequest.of(page - 1, pageSize))
@@ -42,6 +48,7 @@ public class BillServiceImpl implements BillService {
         Bill bill = billRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
+        // TODO: 8/18/22 check user
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -50,6 +57,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill addBill(BillDTO billDto) {
+        // TODO: 8/18/22 check user
 //        if (billDto.getOwnerId() == null) {
 //            throw new BadRequestException("Owner ID");
 //        }
@@ -69,6 +77,7 @@ public class BillServiceImpl implements BillService {
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
 
+        // TODO: 8/18/22 check user
 //        if (!CurrentUserUtils.isAdminOrAuthor(existingBill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -77,6 +86,8 @@ public class BillServiceImpl implements BillService {
                 billRepository.existsByAccountNumber(billDto.getAccountNumber())) {
             throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
         }
+
+        // TODO: 8/18/22 update totalPrice of all stats connected to this bill
 
         existingBill.setAddress(billDto.getAddress());
         existingBill.setAccountNumber(billDto.getAccountNumber());
@@ -88,6 +99,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void deleteBillById(long id) {
+        // TODO: 8/18/22 check user
 //        Bill bill = billRepository.findById(id).orElseThrow(
 //            () -> new ResourceNotFoundException("Bill", "id", id)
 //        );
@@ -95,6 +107,55 @@ public class BillServiceImpl implements BillService {
 //            throw new NotEnoughPermissionException();
 //        }
 
+        // TODO: 8/18/22 delete all stats connected to this bill
+
         billRepository.deleteById(id);
+    }
+
+    @Override
+    public Bill addStatsToBill(long id, StatsIdDTO statsIdDTO) {
+        Bill bill = billRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Bill", "id", id)
+        );
+
+        // TODO: 8/18/22 check user
+
+        List<Long> newStats = bill.getStats();
+        newStats.add(statsIdDTO.getStatsId());
+        bill.setStats(newStats);
+
+        return billRepository.save(bill);
+    }
+
+    @Override
+    public Bill deleteStatsFromBill(long id, StatsIdDTO statsIdDTO) {
+        Bill bill = billRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Bill", "id", id)
+        );
+
+        // TODO: 8/18/22 check user
+
+        List<Long> newStats = bill.getStats();
+        newStats.remove(statsIdDTO.getStatsId());
+        bill.setStats(newStats);
+
+        return billRepository.save(bill);
+    }
+
+    private Stats getStats(long statsId) {
+        try {
+            Stats stats = restTemplate.getForObject(
+                    "http://BILL/api/v1/bills/{billId}",
+                    Stats.class,
+                    statsId
+            );
+            if (stats == null) {
+                throw new ResourceNotFoundException("Stats", "id", statsId);
+            }
+            return stats;
+        } catch (HttpClientErrorException.NotFound e) {
+            e.printStackTrace();
+            throw new ResourceNotFoundException("Stats", "id", statsId);
+        }
     }
 }

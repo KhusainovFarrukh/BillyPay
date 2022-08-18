@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 import static kh.farrukh.bill.Constants.*;
 
@@ -43,6 +45,9 @@ public class Bill {
 //    @JsonIgnoreProperties("bills")
 //    @ManyToOne(optional = false)
 //    private AppUser owner;
+
+    @ElementCollection
+    private List<Long> stats = new ArrayList<>();
 
 //    @JsonIgnoreProperties("bill")
 //    @OneToMany(mappedBy = "bill", orphanRemoval = true)

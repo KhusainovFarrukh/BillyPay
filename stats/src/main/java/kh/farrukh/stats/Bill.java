@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.ElementCollection;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +26,8 @@ public class Bill {
     private BillType type;
 
     private Double price;
+
+    private List<Long> stats = new ArrayList<>();
 
 //    @JsonIgnoreProperties("bills")
 //    @ManyToOne(optional = false)

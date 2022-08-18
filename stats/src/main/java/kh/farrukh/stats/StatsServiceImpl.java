@@ -1,12 +1,10 @@
 package kh.farrukh.stats;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kh.farrukh.stats.utils.exception.custom.exceptions.BadRequestException;
 import kh.farrukh.stats.utils.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.stats.utils.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -81,7 +79,9 @@ public class StatsServiceImpl implements StatsService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        return statsRepository.save(new Stats(statsDto, bill.getPrice()));
+        Stats stats = statsRepository.save(new Stats(statsDto, bill.getPrice()));
+        addStatsToBill(statsDto.getBillId(), new StatsIdDTO(stats.getId()));
+        return stats;
     }
 
     @Override
@@ -114,16 +114,51 @@ public class StatsServiceImpl implements StatsService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
+        deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
         statsRepository.deleteById(id);
     }
 
     private Bill getBill(Long billId) {
         try {
-            Bill bill = restTemplate.execute(
+            Bill bill = restTemplate.getForObject(
                     "http://BILL/api/v1/bills/{billId}",
-                    HttpMethod.GET,
-                    null,
-                    response -> new ObjectMapper().readValue(response.getBody(), Bill.class),
+                    Bill.class,
+                    billId
+            );
+            if (bill == null) {
+                throw new ResourceNotFoundException("Bill", "id", billId);
+            }
+            return bill;
+        } catch (HttpClientErrorException.NotFound e) {
+            e.printStackTrace();
+            throw new ResourceNotFoundException("Bill", "id", billId);
+        }
+    }
+
+    private Bill addStatsToBill(long billId, StatsIdDTO statsIdDTO) {
+        try {
+            Bill bill = restTemplate.postForObject(
+                    "http://BILL/api/v1/bills/{billId}/add-stats",
+                    statsIdDTO,
+                    Bill.class,
+                    billId
+            );
+            if (bill == null) {
+                throw new ResourceNotFoundException("Bill", "id", billId);
+            }
+            return bill;
+        } catch (HttpClientErrorException.NotFound e) {
+            e.printStackTrace();
+            throw new ResourceNotFoundException("Bill", "id", billId);
+        }
+    }
+
+    private Bill deleteStatsFromBill(long billId, StatsIdDTO statsIdDTO) {
+        try {
+            Bill bill = restTemplate.postForObject(
+                    "http://BILL/api/v1/bills/{billId}/delete-stats",
+                    statsIdDTO,
+                    Bill.class,
                     billId
             );
             if (bill == null) {

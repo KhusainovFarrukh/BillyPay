@@ -17,4 +17,8 @@ public interface BillService {
     Bill updateBill(long id, BillDTO billDTO);
 
     void deleteBillById(long id);
+
+    Bill addStatsToBill(long id, StatsIdDTO statsIdDTO);
+
+    Bill deleteStatsFromBill(long id, StatsIdDTO statsIdDTO);
 }

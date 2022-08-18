@@ -41,6 +41,22 @@ public class BillController {
         return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("{id}/add-stats")
+    public ResponseEntity<Bill> addStatsToBill(
+            @PathVariable long id,
+            @Valid @RequestBody StatsIdDTO statsIdDTO
+    ) {
+        return new ResponseEntity<>(billService.addStatsToBill(id, statsIdDTO), HttpStatus.OK);
+    }
+
+    @PostMapping("{id}/delete-stats")
+    public ResponseEntity<Bill> deleteStatsFromBill(
+            @PathVariable long id,
+            @Valid @RequestBody StatsIdDTO statsIdDTO
+    ) {
+        return new ResponseEntity<>(billService.deleteStatsFromBill(id, statsIdDTO), HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<Bill> updateBill(
             @PathVariable long id,
