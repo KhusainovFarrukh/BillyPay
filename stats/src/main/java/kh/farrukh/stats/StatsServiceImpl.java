@@ -120,7 +120,7 @@ public class StatsServiceImpl implements StatsService {
     private Bill getBill(Long billId) {
         try {
             Bill bill = restTemplate.execute(
-                    "http://localhost:8080/api/v1/bills/{billId}",
+                    "http://BILL/api/v1/bills/{billId}",
                     HttpMethod.GET,
                     null,
                     response -> new ObjectMapper().readValue(response.getBody(), Bill.class),
