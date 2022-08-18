@@ -5,7 +5,7 @@ import kh.farrukh.stats.utils.paging.PagingResponse;
 public interface StatsService {
 
     PagingResponse<Stats> getStatsList(
-//            Long billId,
+            Long billId,
             int pageNumber,
             int pageSize
     );

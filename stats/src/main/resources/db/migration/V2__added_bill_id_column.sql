@@ -1,0 +1,2 @@
+ALTER TABLE stats
+    ADD bill_id BIGINT NOT NULL;

@@ -19,12 +19,11 @@ public class StatsController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<Stats>> getStatsList(
-//        @RequestParam(name = "bill_id", required = false) Long billId,
+            @RequestParam(name = "bill_id", required = false) Long billId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-//        return new ResponseEntity<>(statsService.getStatsList(billId, page, pageSize), HttpStatus.OK);
-        return new ResponseEntity<>(statsService.getStatsList(page, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(statsService.getStatsList(billId, page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

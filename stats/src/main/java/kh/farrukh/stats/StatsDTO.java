@@ -24,6 +24,6 @@ public class StatsDTO {
     @Min(0)
     private Double amount;
 
-//    @JsonProperty("bill_id")
-//    private Long billId;
+    @JsonProperty("bill_id")
+    private Long billId;
 }

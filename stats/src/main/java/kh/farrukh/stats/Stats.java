@@ -38,6 +38,10 @@ public class Stats {
     @JsonProperty("total_price")
     private Double totalPrice;
 
+    @JsonProperty("bill_id")
+    @Column(nullable = false)
+    private Long billId;
+
 //    @JsonIgnoreProperties("stats")
 //    @ManyToOne(optional = false)
 //    private Bill bill;
@@ -50,8 +54,8 @@ public class Stats {
 //        this.totalPrice = this.amount * this.bill.getPrice();
 //    }
 
-    public Stats(StatsDTO billDTO) {
+    public Stats(StatsDTO billDTO, Double price) {
         BeanUtils.copyProperties(billDTO, this);
-        this.totalPrice = this.amount * 1;
+        this.totalPrice = this.amount * price;
     }
 }
