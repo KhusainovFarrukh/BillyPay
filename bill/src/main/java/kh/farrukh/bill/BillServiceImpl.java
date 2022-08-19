@@ -87,7 +87,9 @@ public class BillServiceImpl implements BillService {
             throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
         }
 
-        // TODO: 8/18/22 update totalPrice of all stats connected to this bill
+        if (!billDto.getPrice().equals(existingBill.getPrice())) {
+            updateTotalPriceOfStats(id, billDto.getPrice());
+        }
 
         existingBill.setAddress(billDto.getAddress());
         existingBill.setAccountNumber(billDto.getAccountNumber());
@@ -163,6 +165,15 @@ public class BillServiceImpl implements BillService {
         restTemplate.delete(
                 "http://STATS/api/v1/stats?bill_id={billId}",
                 billId
+        );
+    }
+
+    private void updateTotalPriceOfStats(long billId, Double price) {
+        restTemplate.put(
+                "http://STATS/api/v1/stats?bill_id={billId}&price={price}",
+                null,
+                billId,
+                price
         );
     }
 }

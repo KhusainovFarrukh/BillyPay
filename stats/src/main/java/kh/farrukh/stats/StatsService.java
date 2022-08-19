@@ -19,4 +19,6 @@ public interface StatsService {
     void deleteStatsById(long id);
 
     void deleteStatsByBillId(long billId);
+
+    void updateTotalPriceOfStatsByBillId(long billId, Double price);
 }

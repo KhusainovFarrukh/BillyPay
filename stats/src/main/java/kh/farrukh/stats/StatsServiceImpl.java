@@ -125,6 +125,11 @@ public class StatsServiceImpl implements StatsService {
         statsRepository.deleteAllByBillId(billId);
     }
 
+    @Override
+    public void updateTotalPriceOfStatsByBillId(long billId, Double price) {
+        statsRepository.updateTotalPriceByBillId(billId, price);
+    }
+
     private Bill getBill(Long billId) {
         try {
             Bill bill = restTemplate.getForObject(

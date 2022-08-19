@@ -55,4 +55,13 @@ public class StatsController {
         statsService.deleteStatsByBillId(billId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping
+    public ResponseEntity<Void> updateTotalPriceOfStatsByBillId(
+            @RequestParam("bill_id") long billId,
+            @RequestParam("price") Double price
+    ) {
+        statsService.updateTotalPriceOfStatsByBillId(billId, price);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
