@@ -1,5 +1,8 @@
 package kh.farrukh.stats;
 
+import kh.farrukh.clients.bill.Bill;
+import kh.farrukh.clients.bill.BillClient;
+import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.stats.utils.exception.custom.exceptions.BadRequestException;
 import kh.farrukh.stats.utils.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.stats.utils.paging.PagingResponse;
@@ -7,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import static kh.farrukh.stats.utils.checkers.Checkers.checkPageNumber;
 
@@ -17,7 +18,7 @@ import static kh.farrukh.stats.utils.checkers.Checkers.checkPageNumber;
 public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
-    private final RestTemplate restTemplate;
+    private final BillClient billClient;
 //    private final UserRepository userRepository;
 
     @Override
@@ -32,7 +33,7 @@ public class StatsServiceImpl implements StatsService {
                     PageRequest.of(page - 1, pageSize)
             ));
         } else {
-            getBill(billId);
+            billClient.getBillById(billId);
             return new PagingResponse<>(statsRepository.findAllByBillId(
                     billId, PageRequest.of(page - 1, pageSize)
             ));
@@ -75,13 +76,13 @@ public class StatsServiceImpl implements StatsService {
         if (statsDto.getBillId() == null) {
             throw new BadRequestException("Bill ID");
         }
-        Bill bill = getBill(statsDto.getBillId());
+        Bill bill = billClient.getBillById(statsDto.getBillId());
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
         Stats stats = statsRepository.save(new Stats(statsDto, bill.getPrice()));
-        addStatsToBill(statsDto.getBillId(), new StatsIdDTO(stats.getId()));
+        billClient.addStatsToBill(statsDto.getBillId(), new StatsIdDTO(stats.getId()));
         return stats;
     }
 
@@ -91,7 +92,7 @@ public class StatsServiceImpl implements StatsService {
                 () -> new ResourceNotFoundException("Stats", "id", id)
         );
 
-        Bill bill = getBill(existingStats.getBillId());
+        Bill bill = billClient.getBillById(existingStats.getBillId());
 
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(existingStats.getBill().getOwner().getId(), userRepository)) {
@@ -115,7 +116,7 @@ public class StatsServiceImpl implements StatsService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
+        billClient.deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
         statsRepository.deleteById(id);
     }
 
@@ -128,58 +129,5 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public void updateTotalPriceOfStatsByBillId(long billId, Double price) {
         statsRepository.updateTotalPriceByBillId(billId, price);
-    }
-
-    private Bill getBill(Long billId) {
-        try {
-            Bill bill = restTemplate.getForObject(
-                    "http://BILL/api/v1/bills/{billId}",
-                    Bill.class,
-                    billId
-            );
-            if (bill == null) {
-                throw new ResourceNotFoundException("Bill", "id", billId);
-            }
-            return bill;
-        } catch (HttpClientErrorException.NotFound e) {
-            e.printStackTrace();
-            throw new ResourceNotFoundException("Bill", "id", billId);
-        }
-    }
-
-    private Bill addStatsToBill(long billId, StatsIdDTO statsIdDTO) {
-        try {
-            Bill bill = restTemplate.postForObject(
-                    "http://BILL/api/v1/bills/{billId}/add-stats",
-                    statsIdDTO,
-                    Bill.class,
-                    billId
-            );
-            if (bill == null) {
-                throw new ResourceNotFoundException("Bill", "id", billId);
-            }
-            return bill;
-        } catch (HttpClientErrorException.NotFound e) {
-            e.printStackTrace();
-            throw new ResourceNotFoundException("Bill", "id", billId);
-        }
-    }
-
-    private Bill deleteStatsFromBill(long billId, StatsIdDTO statsIdDTO) {
-        try {
-            Bill bill = restTemplate.postForObject(
-                    "http://BILL/api/v1/bills/{billId}/delete-stats",
-                    statsIdDTO,
-                    Bill.class,
-                    billId
-            );
-            if (bill == null) {
-                throw new ResourceNotFoundException("Bill", "id", billId);
-            }
-            return bill;
-        } catch (HttpClientErrorException.NotFound e) {
-            e.printStackTrace();
-            throw new ResourceNotFoundException("Bill", "id", billId);
-        }
     }
 }
