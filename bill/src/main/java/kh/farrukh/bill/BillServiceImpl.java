@@ -3,11 +3,11 @@ package kh.farrukh.bill;
 import kh.farrukh.bill.utils.exception.custom.exceptions.DuplicateResourceException;
 import kh.farrukh.bill.utils.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.bill.utils.paging.PagingResponse;
+import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.clients.stats.StatsClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static kh.farrukh.bill.utils.checkers.Checkers.checkPageNumber;
 public class BillServiceImpl implements BillService {
 
     private final BillRepository billRepository;
-    private final RestTemplate restTemplate;
+    private final StatsClient statsClient;
 //    private final UserRepository userRepository;
 
     @Override
@@ -88,7 +88,7 @@ public class BillServiceImpl implements BillService {
         }
 
         if (!billDto.getPrice().equals(existingBill.getPrice())) {
-            updateTotalPriceOfStats(id, billDto.getPrice());
+            statsClient.updateTotalPriceOfStatsByBillId(id, billDto.getPrice());
         }
 
         existingBill.setAddress(billDto.getAddress());
@@ -109,7 +109,7 @@ public class BillServiceImpl implements BillService {
 //            throw new NotEnoughPermissionException();
 //        }
 
-        deleteAllStatsOfBill(id);
+        statsClient.deleteStatsByBillId(id);
 
         billRepository.deleteById(id);
     }
@@ -142,38 +142,5 @@ public class BillServiceImpl implements BillService {
         bill.setStats(newStats);
 
         return billRepository.save(bill);
-    }
-
-    private Stats getStats(long statsId) {
-        try {
-            Stats stats = restTemplate.getForObject(
-                    "http://STATS/api/v1/stats/{statsId}",
-                    Stats.class,
-                    statsId
-            );
-            if (stats == null) {
-                throw new ResourceNotFoundException("Stats", "id", statsId);
-            }
-            return stats;
-        } catch (HttpClientErrorException.NotFound e) {
-            e.printStackTrace();
-            throw new ResourceNotFoundException("Stats", "id", statsId);
-        }
-    }
-
-    private void deleteAllStatsOfBill(long billId) {
-        restTemplate.delete(
-                "http://STATS/api/v1/stats?bill_id={billId}",
-                billId
-        );
-    }
-
-    private void updateTotalPriceOfStats(long billId, Double price) {
-        restTemplate.put(
-                "http://STATS/api/v1/stats?bill_id={billId}&price={price}",
-                null,
-                billId,
-                price
-        );
     }
 }

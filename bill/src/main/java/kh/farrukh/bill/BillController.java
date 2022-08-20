@@ -1,6 +1,7 @@
 package kh.farrukh.bill;
 
 import kh.farrukh.bill.utils.paging.PagingResponse;
+import kh.farrukh.clients.bill.StatsIdDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class BillController {
         return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
     }
 
+    // TODO: 8/20/22 use ENDPOINT_ constant
     @PostMapping("{id}/add-stats")
     public ResponseEntity<Bill> addStatsToBill(
             @PathVariable long id,
@@ -49,6 +51,7 @@ public class BillController {
         return new ResponseEntity<>(billService.addStatsToBill(id, statsIdDTO), HttpStatus.OK);
     }
 
+    // TODO: 8/20/22 use ENDPOINT_ constant
     @PostMapping("{id}/delete-stats")
     public ResponseEntity<Bill> deleteStatsFromBill(
             @PathVariable long id,

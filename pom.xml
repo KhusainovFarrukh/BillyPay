@@ -12,6 +12,7 @@
         <module>bill</module>
         <module>stats</module>
         <module>eureka-server</module>
+        <module>clients</module>
     </modules>
 
     <name>BillyPay</name>
@@ -47,6 +48,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 
