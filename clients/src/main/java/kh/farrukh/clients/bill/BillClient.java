@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
-@FeignClient(
-        name = "bill",
-        url = "${clients.bill.url}"
-)
+@FeignClient(name = "bill")
 public interface BillClient {
 
     // TODO: 8/20/22 use ENDPOINT_ constant

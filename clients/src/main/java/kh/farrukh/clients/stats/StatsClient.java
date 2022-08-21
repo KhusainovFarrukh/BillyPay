@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(
-        name = "stats",
-        url = "${clients.stats.url}"
-)
+@FeignClient(name = "stats")
 public interface StatsClient {
 
     // TODO: 8/20/22 use ENDPOINT_ constant
