@@ -1,5 +1,6 @@
 package kh.farrukh.stats;
 
+import feign.FeignException;
 import kh.farrukh.clients.bill.Bill;
 import kh.farrukh.clients.bill.BillClient;
 import kh.farrukh.clients.bill.StatsIdDTO;
@@ -33,7 +34,11 @@ public class StatsServiceImpl implements StatsService {
                     PageRequest.of(page - 1, pageSize)
             ));
         } else {
-            billClient.getBillById(billId);
+            try {
+                billClient.getBillById(billId);
+            } catch (FeignException.NotFound e) {
+                throw new ResourceNotFoundException("Bill", "id", billId);
+            }
             return new PagingResponse<>(statsRepository.findAllByBillId(
                     billId, PageRequest.of(page - 1, pageSize)
             ));
@@ -76,7 +81,12 @@ public class StatsServiceImpl implements StatsService {
         if (statsDto.getBillId() == null) {
             throw new BadRequestException("Bill ID");
         }
-        Bill bill = billClient.getBillById(statsDto.getBillId());
+        Bill bill;
+        try {
+            bill = billClient.getBillById(statsDto.getBillId());
+        } catch (FeignException.NotFound e) {
+            throw new ResourceNotFoundException("Bill", "id", statsDto.getBillId());
+        }
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
@@ -92,7 +102,12 @@ public class StatsServiceImpl implements StatsService {
                 () -> new ResourceNotFoundException("Stats", "id", id)
         );
 
-        Bill bill = billClient.getBillById(existingStats.getBillId());
+        Bill bill;
+        try {
+            bill = billClient.getBillById(existingStats.getBillId());
+        } catch (FeignException.NotFound e) {
+            throw new ResourceNotFoundException("Bill", "id", existingStats.getBillId());
+        }
 
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(existingStats.getBill().getOwner().getId(), userRepository)) {
@@ -116,7 +131,11 @@ public class StatsServiceImpl implements StatsService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        billClient.deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
+        try {
+            billClient.deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
+        } catch (FeignException.NotFound e) {
+            throw new ResourceNotFoundException("Bill", "id", stats.getBillId());
+        }
         statsRepository.deleteById(id);
     }
 
