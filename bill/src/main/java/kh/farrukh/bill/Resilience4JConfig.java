@@ -22,6 +22,8 @@ public class Resilience4JConfig {
         CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
                 .failureRateThreshold(50)
                 .waitDurationInOpenState(Duration.ofSeconds(10))
+                .slidingWindowSize(10)
+                .minimumNumberOfCalls(10)
                 .build();
 
         return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
