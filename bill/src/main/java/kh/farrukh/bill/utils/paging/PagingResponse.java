@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class PagingResponse<T> {
     @JsonProperty("total_items")
     private long totalItems = 0;
     private int page = 1;
-    private List<T> items = List.of();
+    private List<T> items = new ArrayList<>();
 
     public PagingResponse(Page<T> page) {
         if (page != null) {

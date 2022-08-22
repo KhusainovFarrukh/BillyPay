@@ -4,8 +4,10 @@ import kh.farrukh.bill.utils.exception.custom.exceptions.DuplicateResourceExcept
 import kh.farrukh.bill.utils.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.bill.utils.paging.PagingResponse;
 import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,43 @@ public class BillServiceImpl implements BillService {
 //        } else {
 //            throw new NotEnoughPermissionException();
 //        }
+    }
+
+    @Override
+    public PagingResponse<BillWithStatsDTO> getBillsWithStats(
+//            Long ownerId,
+            int page,
+            int pageSize
+    ) {
+        checkPageNumber(page);
+        // TODO: 8/18/22 check user
+//        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
+        Page<Bill> billsPage = billRepository.findAll(PageRequest.of(page - 1, pageSize));
+
+        PagingResponse<BillWithStatsDTO> pagingResponse = new PagingResponse<>();
+        pagingResponse.setPage(billsPage.getPageable().getPageNumber() + 1);
+        pagingResponse.setTotalPages(billsPage.getTotalPages());
+        pagingResponse.setTotalItems(billsPage.getTotalElements());
+        if (billsPage.hasNext()) {
+            pagingResponse.setNextPage(billsPage.nextPageable().getPageNumber() + 1);
+        }
+        if (billsPage.hasPrevious()) {
+            pagingResponse.setPrevPage(billsPage.previousPageable().getPageNumber() + 1);
+        }
+
+        billsPage.forEach(bill -> {
+            List<Stats> stats = statsClient.getAllStatsOfBill(bill.getId());
+            pagingResponse.getItems().add(new BillWithStatsDTO(bill, stats));
+        });
+//        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
+//            checkUserId(userRepository, ownerId);
+//            return new PagingResponse<>(billRepository.findAllByOwner_Id(
+//                ownerId, PageRequest.of(page - 1, pageSize)
+//            ));
+//        } else {
+//            throw new NotEnoughPermissionException();
+//        }
+        return pagingResponse;
     }
 
     @Override

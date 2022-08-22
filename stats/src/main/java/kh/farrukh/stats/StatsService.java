@@ -2,6 +2,8 @@ package kh.farrukh.stats;
 
 import kh.farrukh.stats.utils.paging.PagingResponse;
 
+import java.util.List;
+
 public interface StatsService {
 
     PagingResponse<Stats> getStatsList(
@@ -9,6 +11,8 @@ public interface StatsService {
             int pageNumber,
             int pageSize
     );
+
+    List<Stats> getAllStatsOfBill(long billId);
 
     Stats getStatsById(long id);
 

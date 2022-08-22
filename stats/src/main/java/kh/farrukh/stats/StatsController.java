@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static kh.farrukh.stats.Constants.ENDPOINT_STATS;
 
 @RestController
@@ -24,6 +26,13 @@ public class StatsController {
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
         return new ResponseEntity<>(statsService.getStatsList(billId, page, pageSize), HttpStatus.OK);
+    }
+
+    @GetMapping("of-bill")
+    public ResponseEntity<List<Stats>> getAllStatsOfBill(
+            @RequestParam(name = "bill_id") long billId
+    ) {
+        return new ResponseEntity<>(statsService.getAllStatsOfBill(billId), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

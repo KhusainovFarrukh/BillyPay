@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static kh.farrukh.stats.utils.checkers.Checkers.checkPageNumber;
 
 @Service
@@ -62,6 +64,11 @@ public class StatsServiceImpl implements StatsService {
 //        } else {
 //            throw new NotEnoughPermissionException();
 //        }
+    }
+
+    @Override
+    public List<Stats> getAllStatsOfBill(long billId) {
+        return statsRepository.findAllByBillId(billId);
     }
 
     @Override

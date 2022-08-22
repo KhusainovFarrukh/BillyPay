@@ -11,6 +11,12 @@ public interface BillService {
             int pageSize
     );
 
+    PagingResponse<BillWithStatsDTO> getBillsWithStats(
+//            Long ownerId,
+            int pageNumber,
+            int pageSize
+    );
+
     Bill getBillById(long id);
 
     Bill addBill(BillDTO billDTO);
