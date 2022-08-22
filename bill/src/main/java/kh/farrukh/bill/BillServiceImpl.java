@@ -7,10 +7,13 @@ import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import static kh.farrukh.bill.utils.checkers.Checkers.checkPageNumber;
@@ -21,6 +24,7 @@ public class BillServiceImpl implements BillService {
 
     private final BillRepository billRepository;
     private final StatsClient statsClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 //    private final UserRepository userRepository;
 
     @Override
@@ -67,8 +71,13 @@ public class BillServiceImpl implements BillService {
             pagingResponse.setPrevPage(billsPage.previousPageable().getPageNumber() + 1);
         }
 
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("get-stats-of-bill");
+
         billsPage.forEach(bill -> {
-            List<Stats> stats = statsClient.getAllStatsOfBill(bill.getId());
+            List<Stats> stats = circuitBreaker.run(
+                    () -> statsClient.getAllStatsOfBill(bill.getId()),
+                    (throwable) -> Collections.emptyList()
+            );
             pagingResponse.getItems().add(new BillWithStatsDTO(bill, stats));
         });
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
