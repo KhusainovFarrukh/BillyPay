@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.bill.Constants.ENDPOINT_BILL;
+import static kh.farrukh.bill.Constants.*;
 
 @RestController
 @RequestMapping(ENDPOINT_BILL)
@@ -55,8 +55,7 @@ public class BillController {
         return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
     }
 
-    // TODO: 8/20/22 use ENDPOINT_ constant
-    @PostMapping("{id}/add-stats")
+    @PostMapping(ENDPOINT_POSTFIX_ADD_STATS_TO_BILL)
     public ResponseEntity<BillResponseDTO> addStatsToBill(
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
@@ -64,8 +63,7 @@ public class BillController {
         return new ResponseEntity<>(billService.addStatsToBill(id, statsIdDTO), HttpStatus.OK);
     }
 
-    // TODO: 8/20/22 use ENDPOINT_ constant
-    @PostMapping("{id}/delete-stats")
+    @PostMapping(ENDPOINT_POSTFIX_DELETE_STATS_FROM_BILL)
     public ResponseEntity<BillResponseDTO> deleteStatsFromBill(
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
