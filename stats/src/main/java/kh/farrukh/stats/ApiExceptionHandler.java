@@ -1,6 +1,7 @@
-package kh.farrukh.stats.utils.exception.handling;
+package kh.farrukh.stats;
 
-import kh.farrukh.stats.utils.exception.ApiException;
+import kh.farrukh.common.exceptions.ApiException;
+import kh.farrukh.common.exceptions.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static kh.farrukh.stats.utils.exception.ExceptionMessages.EXCEPTION_METHOD_ARGUMENT_NOT_VALID;
-import static kh.farrukh.stats.utils.exception.ExceptionMessages.EXCEPTION_UNKNOWN;
+import static kh.farrukh.common.exceptions.ExceptionMessages.EXCEPTION_METHOD_ARGUMENT_NOT_VALID;
+import static kh.farrukh.common.exceptions.ExceptionMessages.EXCEPTION_UNKNOWN;
 
 /**
  * It handles exceptions thrown by the application
@@ -63,14 +64,14 @@ public class ApiExceptionHandler {
             errorsMap.put(error.getField(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(
-                new ErrorResponse(
-                        messageSource.getMessage(EXCEPTION_METHOD_ARGUMENT_NOT_VALID, null, locale),
-                        HttpStatus.BAD_REQUEST,
-                        HttpStatus.BAD_REQUEST.value(),
-                        ZonedDateTime.now(),
-                        errorsMap
-                ),
-                HttpStatus.BAD_REQUEST
+            new ErrorResponse(
+                messageSource.getMessage(EXCEPTION_METHOD_ARGUMENT_NOT_VALID, null, locale),
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.value(),
+                ZonedDateTime.now(),
+                errorsMap
+            ),
+            HttpStatus.BAD_REQUEST
         );
     }
 

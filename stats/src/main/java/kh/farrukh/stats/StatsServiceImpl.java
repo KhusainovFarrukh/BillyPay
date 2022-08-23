@@ -4,9 +4,9 @@ import feign.FeignException;
 import kh.farrukh.clients.bill.Bill;
 import kh.farrukh.clients.bill.BillClient;
 import kh.farrukh.clients.bill.StatsIdDTO;
-import kh.farrukh.stats.utils.exception.custom.exceptions.BadRequestException;
-import kh.farrukh.stats.utils.exception.custom.exceptions.ResourceNotFoundException;
-import kh.farrukh.stats.utils.paging.PagingResponse;
+import kh.farrukh.common.exceptions.exceptions.BadRequestException;
+import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
+import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static kh.farrukh.stats.utils.checkers.Checkers.checkPageNumber;
+import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 
 @Service
 @RequiredArgsConstructor

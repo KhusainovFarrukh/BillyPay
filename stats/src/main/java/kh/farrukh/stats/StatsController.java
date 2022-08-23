@@ -1,13 +1,12 @@
 package kh.farrukh.stats;
 
-import kh.farrukh.stats.utils.paging.PagingResponse;
+import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static kh.farrukh.stats.Constants.ENDPOINT_STATS;

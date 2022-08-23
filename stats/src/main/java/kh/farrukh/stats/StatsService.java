@@ -1,6 +1,6 @@
 package kh.farrukh.stats;
 
-import kh.farrukh.stats.utils.paging.PagingResponse;
+import kh.farrukh.common.paging.PagingResponse;
 
 import java.util.List;
 
