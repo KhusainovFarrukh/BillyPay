@@ -1,5 +1,8 @@
 package kh.farrukh.bill;
 
+import kh.farrukh.bill.payloads.BillRequestDTO;
+import kh.farrukh.bill.payloads.BillResponseDTO;
+import kh.farrukh.bill.payloads.BillWithStatsDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
@@ -28,7 +31,7 @@ public class BillServiceImpl implements BillService {
 //    private final UserRepository userRepository;
 
     @Override
-    public PagingResponse<Bill> getBills(
+    public PagingResponse<BillResponseDTO> getBills(
 //            Long ownerId,
             int page,
             int pageSize
@@ -37,8 +40,8 @@ public class BillServiceImpl implements BillService {
         // TODO: 8/18/22 check user
 //        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
         return new PagingResponse<>(billRepository.findAll(
-                PageRequest.of(page - 1, pageSize))
-        );
+                PageRequest.of(page - 1, pageSize)
+        ).map(BillResponseDTO::new));
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
 //            checkUserId(userRepository, ownerId);
 //            return new PagingResponse<>(billRepository.findAllByOwner_Id(
@@ -92,7 +95,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill getBillById(long id) {
+    public BillResponseDTO getBillById(long id) {
         Bill bill = billRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
@@ -100,11 +103,11 @@ public class BillServiceImpl implements BillService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        return bill;
+        return new BillResponseDTO(bill);
     }
 
     @Override
-    public Bill addBill(BillDTO billDto) {
+    public BillResponseDTO addBill(BillRequestDTO billDto) {
         // TODO: 8/18/22 check user
 //        if (billDto.getOwnerId() == null) {
 //            throw new BadRequestException("Owner ID");
@@ -116,11 +119,11 @@ public class BillServiceImpl implements BillService {
             throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
         }
 //        return billRepository.save(new Bill(billDto, userRepository));
-        return billRepository.save(new Bill(billDto));
+        return new BillResponseDTO(billRepository.save(new Bill(billDto)));
     }
 
     @Override
-    public Bill updateBill(long id, BillDTO billDto) {
+    public BillResponseDTO updateBill(long id, BillRequestDTO billDto) {
         Bill existingBill = billRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
@@ -144,7 +147,7 @@ public class BillServiceImpl implements BillService {
         existingBill.setType(billDto.getType());
         existingBill.setPrice(billDto.getPrice());
 
-        return billRepository.save(existingBill);
+        return new BillResponseDTO(billRepository.save(existingBill));
     }
 
     @Override
@@ -163,7 +166,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill addStatsToBill(long id, StatsIdDTO statsIdDTO) {
+    public BillResponseDTO addStatsToBill(long id, StatsIdDTO statsIdDTO) {
         Bill bill = billRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
@@ -174,11 +177,11 @@ public class BillServiceImpl implements BillService {
         newStats.add(statsIdDTO.getStatsId());
         bill.setStats(newStats);
 
-        return billRepository.save(bill);
+        return new BillResponseDTO(billRepository.save(bill));
     }
 
     @Override
-    public Bill deleteStatsFromBill(long id, StatsIdDTO statsIdDTO) {
+    public BillResponseDTO deleteStatsFromBill(long id, StatsIdDTO statsIdDTO) {
         Bill bill = billRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Bill", "id", id)
         );
@@ -189,6 +192,6 @@ public class BillServiceImpl implements BillService {
         newStats.remove(statsIdDTO.getStatsId());
         bill.setStats(newStats);
 
-        return billRepository.save(bill);
+        return new BillResponseDTO(billRepository.save(bill));
     }
 }

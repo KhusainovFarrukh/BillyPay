@@ -1,6 +1,7 @@
 package kh.farrukh.bill;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kh.farrukh.bill.payloads.BillRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,7 +61,7 @@ public class Bill {
 //        );
 //    }
 
-    public Bill(BillDTO billDTO) {
+    public Bill(BillRequestDTO billDTO) {
         BeanUtils.copyProperties(billDTO, this);
     }
 }

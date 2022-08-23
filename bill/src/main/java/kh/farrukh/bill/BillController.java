@@ -1,5 +1,8 @@
 package kh.farrukh.bill;
 
+import kh.farrukh.bill.payloads.BillRequestDTO;
+import kh.farrukh.bill.payloads.BillResponseDTO;
+import kh.farrukh.bill.payloads.BillWithStatsDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,7 @@ public class BillController {
     private final BillService billService;
 
     @GetMapping
-    public ResponseEntity<PagingResponse<Bill>> getBills(
+    public ResponseEntity<PagingResponse<BillResponseDTO>> getBills(
 //            @RequestParam(name = "owner_id", required = false) Long ownerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
@@ -39,22 +42,22 @@ public class BillController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Bill> getBillById(
+    public ResponseEntity<BillResponseDTO> getBillById(
             @PathVariable long id
     ) {
         return new ResponseEntity<>(billService.getBillById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Bill> addBill(
-            @Valid @RequestBody BillDTO billDto
+    public ResponseEntity<BillResponseDTO> addBill(
+            @Valid @RequestBody BillRequestDTO billDto
     ) {
         return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
     }
 
     // TODO: 8/20/22 use ENDPOINT_ constant
     @PostMapping("{id}/add-stats")
-    public ResponseEntity<Bill> addStatsToBill(
+    public ResponseEntity<BillResponseDTO> addStatsToBill(
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
@@ -63,7 +66,7 @@ public class BillController {
 
     // TODO: 8/20/22 use ENDPOINT_ constant
     @PostMapping("{id}/delete-stats")
-    public ResponseEntity<Bill> deleteStatsFromBill(
+    public ResponseEntity<BillResponseDTO> deleteStatsFromBill(
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
@@ -71,9 +74,9 @@ public class BillController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Bill> updateBill(
+    public ResponseEntity<BillResponseDTO> updateBill(
             @PathVariable long id,
-            @Valid @RequestBody BillDTO billDto
+            @Valid @RequestBody BillRequestDTO billDto
     ) {
         return new ResponseEntity<>(billService.updateBill(id, billDto), HttpStatus.OK);
     }

@@ -1,11 +1,14 @@
 package kh.farrukh.bill;
 
+import kh.farrukh.bill.payloads.BillRequestDTO;
+import kh.farrukh.bill.payloads.BillResponseDTO;
+import kh.farrukh.bill.payloads.BillWithStatsDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 
 public interface BillService {
 
-    PagingResponse<Bill> getBills(
+    PagingResponse<BillResponseDTO> getBills(
 //            Long ownerId,
             int pageNumber,
             int pageSize
@@ -17,15 +20,15 @@ public interface BillService {
             int pageSize
     );
 
-    Bill getBillById(long id);
+    BillResponseDTO getBillById(long id);
 
-    Bill addBill(BillDTO billDTO);
+    BillResponseDTO addBill(BillRequestDTO billDTO);
 
-    Bill updateBill(long id, BillDTO billDTO);
+    BillResponseDTO updateBill(long id, BillRequestDTO billDTO);
 
     void deleteBillById(long id);
 
-    Bill addStatsToBill(long id, StatsIdDTO statsIdDTO);
+    BillResponseDTO addStatsToBill(long id, StatsIdDTO statsIdDTO);
 
-    Bill deleteStatsFromBill(long id, StatsIdDTO statsIdDTO);
+    BillResponseDTO deleteStatsFromBill(long id, StatsIdDTO statsIdDTO);
 }

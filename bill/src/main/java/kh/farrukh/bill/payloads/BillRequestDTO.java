@@ -1,6 +1,7 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kh.farrukh.bill.BillType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillDTO {
+public class BillRequestDTO {
 
     private String address;
 
