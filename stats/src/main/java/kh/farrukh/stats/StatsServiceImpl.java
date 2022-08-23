@@ -7,6 +7,8 @@ import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.stats.payloads.StatsRequestDTO;
+import kh.farrukh.stats.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class StatsServiceImpl implements StatsService {
 //    private final UserRepository userRepository;
 
     @Override
-    public PagingResponse<Stats> getStatsList(
+    public PagingResponse<StatsResponseDTO> getStatsList(
             Long billId,
             int page,
             int pageSize
@@ -34,7 +36,7 @@ public class StatsServiceImpl implements StatsService {
         if (billId == null) {
             return new PagingResponse<>(statsRepository.findAll(
                     PageRequest.of(page - 1, pageSize)
-            ));
+            ).map(StatsResponseDTO::new));
         } else {
             try {
                 billClient.getBillById(billId);
@@ -43,7 +45,7 @@ public class StatsServiceImpl implements StatsService {
             }
             return new PagingResponse<>(statsRepository.findAllByBillId(
                     billId, PageRequest.of(page - 1, pageSize)
-            ));
+            ).map(StatsResponseDTO::new));
         }
         // TODO: 8/18/22 add user check
 //        if (billId == null && CurrentUserUtils.isAdmin(userRepository)) {
@@ -67,12 +69,12 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<Stats> getAllStatsOfBill(long billId) {
-        return statsRepository.findAllByBillId(billId);
+    public List<StatsResponseDTO> getAllStatsOfBill(long billId) {
+        return statsRepository.findAllByBillId(billId).stream().map(StatsResponseDTO::new).toList();
     }
 
     @Override
-    public Stats getStatsById(long id) {
+    public StatsResponseDTO getStatsById(long id) {
         Stats stats = statsRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Stats", "id", id)
         );
@@ -80,11 +82,11 @@ public class StatsServiceImpl implements StatsService {
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        return stats;
+        return new StatsResponseDTO(stats);
     }
 
     @Override
-    public Stats addStats(StatsDTO statsDto) {
+    public StatsResponseDTO addStats(StatsRequestDTO statsDto) {
         if (statsDto.getBillId() == null) {
             throw new BadRequestException("Bill ID");
         }
@@ -100,11 +102,11 @@ public class StatsServiceImpl implements StatsService {
 //        }
         Stats stats = statsRepository.save(new Stats(statsDto, bill.getPrice()));
         billClient.addStatsToBill(statsDto.getBillId(), new StatsIdDTO(stats.getId()));
-        return stats;
+        return new StatsResponseDTO(stats);
     }
 
     @Override
-    public Stats updateStats(long id, StatsDTO statsDto) {
+    public StatsResponseDTO updateStats(long id, StatsRequestDTO statsDto) {
         Stats existingStats = statsRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Stats", "id", id)
         );
@@ -126,7 +128,7 @@ public class StatsServiceImpl implements StatsService {
         existingStats.setStartDate(statsDto.getStartDate());
         existingStats.setEndDate(statsDto.getEndDate());
 
-        return statsRepository.save(existingStats);
+        return new StatsResponseDTO(statsRepository.save(existingStats));
     }
 
     @Override

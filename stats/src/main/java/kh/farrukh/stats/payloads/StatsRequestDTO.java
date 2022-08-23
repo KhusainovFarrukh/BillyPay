@@ -1,4 +1,4 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatsDTO {
+public class StatsRequestDTO {
     @NotNull
     @JsonProperty("start_date")
     private LocalDate startDate;

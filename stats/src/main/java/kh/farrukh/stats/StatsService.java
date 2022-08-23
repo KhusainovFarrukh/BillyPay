@@ -1,24 +1,26 @@
 package kh.farrukh.stats;
 
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.stats.payloads.StatsRequestDTO;
+import kh.farrukh.stats.payloads.StatsResponseDTO;
 
 import java.util.List;
 
 public interface StatsService {
 
-    PagingResponse<Stats> getStatsList(
+    PagingResponse<StatsResponseDTO> getStatsList(
             Long billId,
             int pageNumber,
             int pageSize
     );
 
-    List<Stats> getAllStatsOfBill(long billId);
+    List<StatsResponseDTO> getAllStatsOfBill(long billId);
 
-    Stats getStatsById(long id);
+    StatsResponseDTO getStatsById(long id);
 
-    Stats addStats(StatsDTO statsDTO);
+    StatsResponseDTO addStats(StatsRequestDTO statsDTO);
 
-    Stats updateStats(long id, StatsDTO statsDTO);
+    StatsResponseDTO updateStats(long id, StatsRequestDTO statsDTO);
 
     void deleteStatsById(long id);
 

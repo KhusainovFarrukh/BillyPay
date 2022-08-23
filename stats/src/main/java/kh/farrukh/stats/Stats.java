@@ -1,6 +1,7 @@
 package kh.farrukh.stats;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kh.farrukh.stats.payloads.StatsRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +55,7 @@ public class Stats {
 //        this.totalPrice = this.amount * this.bill.getPrice();
 //    }
 
-    public Stats(StatsDTO billDTO, Double price) {
+    public Stats(StatsRequestDTO billDTO, Double price) {
         BeanUtils.copyProperties(billDTO, this);
         this.totalPrice = this.amount * price;
     }
