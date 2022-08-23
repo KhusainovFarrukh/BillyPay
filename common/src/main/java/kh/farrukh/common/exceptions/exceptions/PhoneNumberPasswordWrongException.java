@@ -1,12 +1,12 @@
-package kh.farrukh.bill.utils.exception.custom.exceptions;
+package kh.farrukh.common.exceptions.exceptions;
 
-import kh.farrukh.bill.utils.exception.ApiException;
+import kh.farrukh.common.exceptions.ApiException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static kh.farrukh.bill.utils.exception.ExceptionMessages.EXCEPTION_PHONE_NUMBER_PASSWORD_WRONG;
+import static kh.farrukh.common.exceptions.ExceptionMessages.EXCEPTION_PHONE_NUMBER_PASSWORD_WRONG;
 
 /**
  * `EmailPasswordInvalidException` is a subclass of `ApiException` that is thrown

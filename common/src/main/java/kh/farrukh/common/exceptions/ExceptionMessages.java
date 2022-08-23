@@ -1,4 +1,4 @@
-package kh.farrukh.bill.utils.exception;
+package kh.farrukh.common.exceptions;
 
 /**
  * It's a class that contains constants that are used to look up error messages in the message bundle

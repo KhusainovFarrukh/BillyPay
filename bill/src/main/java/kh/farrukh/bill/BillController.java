@@ -1,7 +1,7 @@
 package kh.farrukh.bill;
 
-import kh.farrukh.bill.utils.paging.PagingResponse;
 import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

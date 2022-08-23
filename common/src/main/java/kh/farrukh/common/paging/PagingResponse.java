@@ -1,4 +1,4 @@
-package kh.farrukh.bill.utils.paging;
+package kh.farrukh.common.paging;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

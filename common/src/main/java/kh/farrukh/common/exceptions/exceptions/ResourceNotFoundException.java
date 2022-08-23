@@ -1,11 +1,11 @@
-package kh.farrukh.bill.utils.exception.custom.exceptions;
+package kh.farrukh.common.exceptions.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import kh.farrukh.bill.utils.exception.ApiException;
+import kh.farrukh.common.exceptions.ApiException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static kh.farrukh.bill.utils.exception.ExceptionMessages.EXCEPTION_RESOURCE_NOT_FOUND;
+import static kh.farrukh.common.exceptions.ExceptionMessages.EXCEPTION_RESOURCE_NOT_FOUND;
 
 /**
  * It's a custom exception class that extends the ApiException class

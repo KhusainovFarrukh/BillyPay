@@ -1,10 +1,10 @@
-package kh.farrukh.bill.utils.exception.custom.exceptions.token_exceptions;
+package kh.farrukh.common.exceptions.exceptions.token_exceptions;
 
-import kh.farrukh.bill.utils.exception.ApiException;
+import kh.farrukh.common.exceptions.ApiException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static kh.farrukh.bill.utils.exception.ExceptionMessages.EXCEPTION_TOKEN_WRONG_TYPE;
+import static kh.farrukh.common.exceptions.ExceptionMessages.EXCEPTION_TOKEN_WRONG_TYPE;
 
 /**
  * `WrongTypeTokenException` is a subclass of `ApiException` that is thrown

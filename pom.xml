@@ -13,6 +13,7 @@
         <module>stats</module>
         <module>eureka-server</module>
         <module>clients</module>
+        <module>common</module>
     </modules>
 
     <name>BillyPay</name>

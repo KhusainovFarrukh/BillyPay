@@ -1,4 +1,4 @@
-package kh.farrukh.bill.utils.exception;
+package kh.farrukh.common.exceptions;
 
 import lombok.Getter;
 import lombok.Setter;

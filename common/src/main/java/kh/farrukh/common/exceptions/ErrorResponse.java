@@ -1,4 +1,4 @@
-package kh.farrukh.bill.utils.exception.handling;
+package kh.farrukh.common.exceptions;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

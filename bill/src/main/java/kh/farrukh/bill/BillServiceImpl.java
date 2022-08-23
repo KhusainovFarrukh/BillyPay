@@ -1,11 +1,11 @@
 package kh.farrukh.bill;
 
-import kh.farrukh.bill.utils.exception.custom.exceptions.DuplicateResourceException;
-import kh.farrukh.bill.utils.exception.custom.exceptions.ResourceNotFoundException;
-import kh.farrukh.bill.utils.paging.PagingResponse;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
+import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
+import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
+import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-import static kh.farrukh.bill.utils.checkers.Checkers.checkPageNumber;
+import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 
 @Service
 @RequiredArgsConstructor

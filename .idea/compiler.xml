@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="bill" />
         <module name="clients" />
+        <module name="common" />
         <module name="stats" />
         <module name="eureka-server" />
       </profile>

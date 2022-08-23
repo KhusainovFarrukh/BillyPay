@@ -1,7 +1,7 @@
 package kh.farrukh.bill;
 
-import kh.farrukh.bill.utils.paging.PagingResponse;
 import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.common.paging.PagingResponse;
 
 public interface BillService {
 
