@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: bill
+  config:
+    import: optional:configserver:http://localhost:8090
