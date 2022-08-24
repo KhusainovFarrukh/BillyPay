@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: bill
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bill
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      # todo add init_data db migration and change it to create-drop
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        format_sql: true
+    show-sql: true
+
+server.port: 8080
+
+spring.messages:
+  basename: messages
+  encoding: UTF-8
+  fallback-to-system-locale: true
+  use-code-as-default-message: false

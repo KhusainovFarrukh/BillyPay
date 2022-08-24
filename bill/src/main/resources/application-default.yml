@@ -11,8 +11,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
-        format_sql: true
-    show-sql: true
+    show-sql: false
 
 server.port: 8080
 
