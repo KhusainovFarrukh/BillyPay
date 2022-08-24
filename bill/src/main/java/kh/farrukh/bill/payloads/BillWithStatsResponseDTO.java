@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillWithStatsDTO {
+public class BillWithStatsResponseDTO {
 
     private Long id;
 
@@ -41,7 +41,7 @@ public class BillWithStatsDTO {
 //    private List<Stats> stats = new ArrayList<>();
 
 
-    public BillWithStatsDTO(Bill bill, List<Stats> stats) {
+    public BillWithStatsResponseDTO(Bill bill, List<Stats> stats) {
         BeanUtils.copyProperties(bill, this);
         this.stats = stats;
     }

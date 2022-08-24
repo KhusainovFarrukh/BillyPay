@@ -2,7 +2,7 @@ package kh.farrukh.bill;
 
 import kh.farrukh.bill.payloads.BillRequestDTO;
 import kh.farrukh.bill.payloads.BillResponseDTO;
-import kh.farrukh.bill.payloads.BillWithStatsDTO;
+import kh.farrukh.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class BillController {
     }
 
     @GetMapping("with-stats")
-    public ResponseEntity<PagingResponse<BillWithStatsDTO>> getBillsWithStats(
+    public ResponseEntity<PagingResponse<BillWithStatsResponseDTO>> getBillsWithStats(
 //            @RequestParam(name = "owner_id", required = false) Long ownerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize

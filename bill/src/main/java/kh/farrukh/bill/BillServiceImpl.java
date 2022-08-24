@@ -2,7 +2,7 @@ package kh.farrukh.bill;
 
 import kh.farrukh.bill.payloads.BillRequestDTO;
 import kh.farrukh.bill.payloads.BillResponseDTO;
-import kh.farrukh.bill.payloads.BillWithStatsDTO;
+import kh.farrukh.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
@@ -53,7 +53,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public PagingResponse<BillWithStatsDTO> getBillsWithStats(
+    public PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
 //            Long ownerId,
             int page,
             int pageSize
@@ -63,7 +63,7 @@ public class BillServiceImpl implements BillService {
 //        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
         Page<Bill> billsPage = billRepository.findAll(PageRequest.of(page - 1, pageSize));
 
-        PagingResponse<BillWithStatsDTO> pagingResponse = new PagingResponse<>();
+        PagingResponse<BillWithStatsResponseDTO> pagingResponse = new PagingResponse<>();
         pagingResponse.setPage(billsPage.getPageable().getPageNumber() + 1);
         pagingResponse.setTotalPages(billsPage.getTotalPages());
         pagingResponse.setTotalItems(billsPage.getTotalElements());
@@ -81,7 +81,7 @@ public class BillServiceImpl implements BillService {
                     () -> statsClient.getAllStatsOfBill(bill.getId()),
                     (throwable) -> Collections.emptyList()
             );
-            pagingResponse.getItems().add(new BillWithStatsDTO(bill, stats));
+            pagingResponse.getItems().add(new BillWithStatsResponseDTO(bill, stats));
         });
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
 //            checkUserId(userRepository, ownerId);

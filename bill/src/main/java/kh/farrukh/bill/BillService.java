@@ -2,7 +2,7 @@ package kh.farrukh.bill;
 
 import kh.farrukh.bill.payloads.BillRequestDTO;
 import kh.farrukh.bill.payloads.BillResponseDTO;
-import kh.farrukh.bill.payloads.BillWithStatsDTO;
+import kh.farrukh.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 
@@ -14,7 +14,7 @@ public interface BillService {
             int pageSize
     );
 
-    PagingResponse<BillWithStatsDTO> getBillsWithStats(
+    PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
 //            Long ownerId,
             int pageNumber,
             int pageSize
