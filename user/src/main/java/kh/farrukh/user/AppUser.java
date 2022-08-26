@@ -3,6 +3,7 @@ package kh.farrukh.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import kh.farrukh.user.payloads.AppUserRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,16 @@ public class AppUser {
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
+
+    public AppUser(AppUserRequestDTO appUserRequestDTO) {
+        this.name = appUserRequestDTO.getName();
+        this.email = appUserRequestDTO.getEmail();
+        this.phoneNumber = appUserRequestDTO.getPhoneNumber();
+        this.password = appUserRequestDTO.getPassword();
+        this.isEnabled = true;
+        this.isLocked = false;
+        this.role = UserRole.USER;
+    }
 
 //    @ManyToOne
 //    @JoinColumn(

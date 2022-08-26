@@ -32,8 +32,8 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<PagingResponse<AppUser>> getUsers(
-        @RequestParam(name = "page", defaultValue = "1") int page,
-        @RequestParam(name = "page_size", defaultValue = "10") int pageSize
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
         return new ResponseEntity<>(userService.getUsers(page, pageSize), HttpStatus.OK);
     }
@@ -47,6 +47,11 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<AppUser> getUserById(@PathVariable long id) {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<AppUser> createUser(@RequestBody AppUserRequestDTO userRequestDTO) {
+        return new ResponseEntity<>(userService.createUser(userRequestDTO), HttpStatus.OK);
     }
 
     /**
@@ -83,8 +88,8 @@ public class UserController {
      */
     @PatchMapping("{id}/role")
     public ResponseEntity<AppUser> setUserRole(
-        @PathVariable long id,
-        @Valid @RequestBody UserRoleRequestDTO roleDto
+            @PathVariable long id,
+            @Valid @RequestBody UserRoleRequestDTO roleDto
     ) {
         return new ResponseEntity<>(userService.setUserRole(id, roleDto), HttpStatus.OK);
     }
@@ -114,8 +119,8 @@ public class UserController {
      */
     @PatchMapping("{id}/password")
     public ResponseEntity<AppUser> setUserPassword(
-        @PathVariable long id,
-        @Valid @RequestBody UserPasswordRequestDTO passwordDto
+            @PathVariable long id,
+            @Valid @RequestBody UserPasswordRequestDTO passwordDto
     ) {
         return new ResponseEntity<>(userService.setUserPassword(id, passwordDto), HttpStatus.OK);
     }

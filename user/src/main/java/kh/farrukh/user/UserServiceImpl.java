@@ -73,6 +73,15 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public AppUser createUser(AppUserRequestDTO userRequestDTO) {
+        if (userRepository.existsByPhoneNumber(userRequestDTO.getPhoneNumber())) {
+            throw new DuplicateResourceException("User", "phone number", userRequestDTO.getPhoneNumber());
+        }
+
+        return userRepository.save(new AppUser(userRequestDTO));
+    }
+
     /**
      * If the username or email is different from the existing one, check if it exists in the database. If it does, throw
      * an exception. If it doesn't, update the user

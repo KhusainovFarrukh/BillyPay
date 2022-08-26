@@ -26,4 +26,7 @@ public class AppUserRequestDTO {
 
     @JsonProperty("image_id")
     private Long imageId;
+
+    // TODO: 8/26/22 separate DTOs for create and update
+    private String password;
 }
