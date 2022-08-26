@@ -2,6 +2,7 @@ package kh.farrukh.user;
 
 import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.user.payloads.AppUserRequestDTO;
+import kh.farrukh.user.payloads.AppUserResponseDTO;
 import kh.farrukh.user.payloads.UserPasswordRequestDTO;
 import kh.farrukh.user.payloads.UserRoleRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UserController {
      * @return A ResponseEntity with a PagingResponse of AppUser objects.
      */
     @GetMapping
-    public ResponseEntity<PagingResponse<AppUser>> getUsers(
+    public ResponseEntity<PagingResponse<AppUserResponseDTO>> getUsers(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
@@ -45,12 +46,12 @@ public class UserController {
      * @return A ResponseEntity with found AppUser.
      */
     @GetMapping("{id}")
-    public ResponseEntity<AppUser> getUserById(@PathVariable long id) {
+    public ResponseEntity<AppUserResponseDTO> getUserById(@PathVariable long id) {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<AppUser> createUser(@RequestBody AppUserRequestDTO userRequestDTO) {
+    public ResponseEntity<AppUserResponseDTO> createUser(@RequestBody AppUserRequestDTO userRequestDTO) {
         return new ResponseEntity<>(userService.createUser(userRequestDTO), HttpStatus.OK);
     }
 
@@ -62,7 +63,7 @@ public class UserController {
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
     @PutMapping("{id}")
-    public ResponseEntity<AppUser> updateUser(@PathVariable long id, @Valid @RequestBody AppUserRequestDTO appUserDto) {
+    public ResponseEntity<AppUserResponseDTO> updateUser(@PathVariable long id, @Valid @RequestBody AppUserRequestDTO appUserDto) {
         return new ResponseEntity<>(userService.updateUser(id, appUserDto), HttpStatus.OK);
     }
 
@@ -87,7 +88,7 @@ public class UserController {
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
     @PatchMapping("{id}/role")
-    public ResponseEntity<AppUser> setUserRole(
+    public ResponseEntity<AppUserResponseDTO> setUserRole(
             @PathVariable long id,
             @Valid @RequestBody UserRoleRequestDTO roleDto
     ) {
@@ -118,7 +119,7 @@ public class UserController {
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
     @PatchMapping("{id}/password")
-    public ResponseEntity<AppUser> setUserPassword(
+    public ResponseEntity<AppUserResponseDTO> setUserPassword(
             @PathVariable long id,
             @Valid @RequestBody UserPasswordRequestDTO passwordDto
     ) {

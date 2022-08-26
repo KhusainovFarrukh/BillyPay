@@ -5,6 +5,7 @@ import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.user.payloads.AppUserRequestDTO;
+import kh.farrukh.user.payloads.AppUserResponseDTO;
 import kh.farrukh.user.payloads.UserPasswordRequestDTO;
 import kh.farrukh.user.payloads.UserRoleRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -53,11 +54,11 @@ public class UserServiceImpl implements UserService {
      * @return A PagingResponse object.
      */
     @Override
-    public PagingResponse<AppUser> getUsers(int page, int pageSize) {
+    public PagingResponse<AppUserResponseDTO> getUsers(int page, int pageSize) {
         checkPageNumber(page);
         return new PagingResponse<>(userRepository.findAll(
                 PageRequest.of(page - 1, pageSize)
-        ));
+        ).map(AppUserResponseDTO::new));
     }
 
     /**
@@ -67,19 +68,23 @@ public class UserServiceImpl implements UserService {
      * @return The userRepository.findById(id) is being returned.
      */
     @Override
-    public AppUser getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(
+    public AppUserResponseDTO getUserById(Long id) {
+        AppUser appUser = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
+
+        return new AppUserResponseDTO(appUser);
     }
 
     @Override
-    public AppUser createUser(AppUserRequestDTO userRequestDTO) {
+    public AppUserResponseDTO createUser(AppUserRequestDTO userRequestDTO) {
         if (userRepository.existsByPhoneNumber(userRequestDTO.getPhoneNumber())) {
             throw new DuplicateResourceException("User", "phone number", userRequestDTO.getPhoneNumber());
         }
 
-        return userRepository.save(new AppUser(userRequestDTO));
+        AppUser appUser = userRepository.save(new AppUser(userRequestDTO));
+
+        return new AppUserResponseDTO(appUser);
     }
 
     /**
@@ -92,7 +97,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public AppUser updateUser(long id, AppUserRequestDTO appUserDto) {
+    public AppUserResponseDTO updateUser(long id, AppUserRequestDTO appUserDto) {
         AppUser existingAppUser = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
@@ -118,7 +123,7 @@ public class UserServiceImpl implements UserService {
 //                () -> new ResourceNotFoundException("Image", "id", appUserDto.getImageId())
 //            ));
 
-        return existingAppUser;
+        return new AppUserResponseDTO(existingAppUser);
 //        } else {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -145,12 +150,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public AppUser setUserRole(long id, UserRoleRequestDTO roleDto) {
+    public AppUserResponseDTO setUserRole(long id, UserRoleRequestDTO roleDto) {
         AppUser user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
         user.setRole(roleDto.getRole());
-        return user;
+        return new AppUserResponseDTO(user);
     }
 
     /**
@@ -189,15 +194,15 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public AppUser setUserPassword(long id, UserPasswordRequestDTO passwordDto) {
+    public AppUserResponseDTO setUserPassword(long id, UserPasswordRequestDTO passwordDto) {
 //        if (CurrentUserUtils.isAdminOrAuthor(id, userRepository)) {
 
-        AppUser currentUser = userRepository.findById(id).orElseThrow(
+        AppUser existingUser = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
-        if (passwordEncoder.matches(passwordDto.getPassword(), currentUser.getPassword())) {
-            currentUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-            return currentUser;
+        if (passwordEncoder.matches(passwordDto.getPassword(), existingUser.getPassword())) {
+            existingUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+            return new AppUserResponseDTO(existingUser);
         } else {
             throw new BadRequestException("Password");
         }
