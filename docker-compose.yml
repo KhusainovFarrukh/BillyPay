@@ -28,8 +28,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@mail.com
       PGADMIN_DEFAULT_PASSWORD: postgres
-    volumes:
-      - pgadmin:/var/lib/pgadmin4/storage
 
   config-server:
     image: farrukhkh/billy-pay-config-server:1.0-SNAPSHOT
@@ -85,12 +83,3 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
       CONFIG_SERVER_URL: http://config-server:8888
       EUREKA_SERVER_URL: http://eureka-server:8761
-
-
-volumes:
-  pgadmin:
-
-
-networks:
-  default:
-    driver: bridge
