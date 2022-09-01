@@ -11,11 +11,11 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - ./init-postgres-dbs.sql:/docker-entrypoint-initdb.d/init-postgres-dbs.sql
-  #    healthcheck:
-  #      test: [ "CMD", "pg_isready", "-U", "postgres" ]
-  #      interval: 10s
-  #      timeout: 5s
-  #      retries: 3
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   pgadmin:
     image: dpage/pgadmin4:6.13
@@ -23,8 +23,8 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgresql
-#        condition: service_healthy
+      postgresql:
+        condition: service_healthy
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@mail.com
       PGADMIN_DEFAULT_PASSWORD: postgres
@@ -39,11 +39,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8090:8090"
-  #    healthcheck:
-  #      test: [ "CMD" ]
-  #      interval: 10s
-  #      timeout: 5s
-  #      retries: 30
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
 
   eureka-server:
     image: farrukhkh/billy-pay-eureka-server:1.0-SNAPSHOT
@@ -53,11 +53,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
-    #    healthcheck:
-    #      test: [ "CMD" ]
-    #      interval: 10s
-    #      timeout: 5s
-    #      retries: 30
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
     environment:
       CONFIG_SERVER_URL: http://config-server:8090
 
@@ -70,12 +73,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - config-server
-      #        condition: service_healthy
-      - eureka-server
-      #        condition: service_healthy
-      - postgresql
-    #        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/bill
       SPRING_DATASOURCE_USERNAME: postgres
@@ -89,5 +92,5 @@ volumes:
 
 
 networks:
-    default:
-      driver: bridge
+  default:
+    driver: bridge
