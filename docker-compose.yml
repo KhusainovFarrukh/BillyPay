@@ -39,11 +39,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8090:8090"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
       interval: 10s
       timeout: 30s
       retries: 5
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server:8761
 
   eureka-server:
     image: farrukhkh/billy-pay-eureka-server:1.0-SNAPSHOT
@@ -53,16 +58,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
-    depends_on:
-      config-server:
-        condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
       interval: 10s
       timeout: 30s
       retries: 5
-    environment:
-      CONFIG_SERVER_URL: http://config-server:8090
 
   bill:
     image: farrukhkh/billy-pay-bill:1.0-SNAPSHOT
@@ -83,7 +83,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/bill
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      CONFIG_SERVER_URL: http://config-server:8090
+      CONFIG_SERVER_URL: http://config-server:8888
       EUREKA_SERVER_URL: http://eureka-server:8761
 
 
