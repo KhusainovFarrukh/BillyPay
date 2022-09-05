@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  postgresql:
+  postgresql-db:
     image: postgres:14-alpine
     container_name: billy-pay-postgres-db
     ports:
@@ -13,9 +13,24 @@ services:
       - ./init-postgres-dbs.sql:/docker-entrypoint-initdb.d/init-postgres-dbs.sql
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 20s
+      timeout: 10s
+      retries: 10
+
+  mysql-db:
+    image: mysql:8
+    container_name: billy-pay-mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: mysql
+    volumes:
+      - ./init-mysql-dbs.sql:/docker-entrypoint-initdb.d/init-mysql-dbs.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-pmysql" ]
+      interval: 20s
+      timeout: 10s
+      retries: 10
 
   pgadmin:
     image: dpage/pgadmin4:6.13
@@ -23,11 +38,34 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      postgresql:
+      postgresql-db:
         condition: service_healthy
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@mail.com
       PGADMIN_DEFAULT_PASSWORD: postgres
+
+  mysql-workbench:
+    image: linuxserver/mysql-workbench:8.0.30
+    container_name: billy-pay-mysql-workbench
+    ports:
+      - "6060:3000"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+  eureka-server:
+    image: farrukhkh/billy-pay-eureka-server:1.0-SNAPSHOT
+    container_name: billy-pay-eureka-server
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
 
   config-server:
     image: farrukhkh/billy-pay-config-server:1.0-SNAPSHOT
@@ -48,20 +86,6 @@ services:
     environment:
       EUREKA_SERVER_URL: http://eureka-server:8761
 
-  eureka-server:
-    image: farrukhkh/billy-pay-eureka-server:1.0-SNAPSHOT
-    container_name: billy-pay-eureka-server
-    build:
-      context: ./eureka-server
-      dockerfile: Dockerfile
-    ports:
-      - "8761:8761"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-      interval: 10s
-      timeout: 30s
-      retries: 5
-
   bill:
     image: farrukhkh/billy-pay-bill:1.0-SNAPSHOT
     container_name: billy-pay-bill
@@ -75,11 +99,55 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
-      postgresql:
+      postgresql-db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/bill
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql-db:5432/bill
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       CONFIG_SERVER_URL: http://config-server:8888
       EUREKA_SERVER_URL: http://eureka-server:8761
+
+  stats:
+    image: farrukhkh/billy-pay-stats:1.0-SNAPSHOT
+    container_name: billy-pay-stats
+    build:
+      context: ./stats
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+        config-server:
+            condition: service_healthy
+        eureka-server:
+            condition: service_healthy
+        mysql-db:
+            condition: service_healthy
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/stats
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: mysql
+        CONFIG_SERVER_URL: http://config-server:8888
+        EUREKA_SERVER_URL: http://eureka-server:8761
+
+  user:
+    image: farrukhkh/billy-pay-user:1.0-SNAPSHOT
+    container_name: billy-pay-user
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    ports:
+        - "8082:8082"
+    depends_on:
+        config-server:
+            condition: service_healthy
+        eureka-server:
+            condition: service_healthy
+        postgresql-db:
+            condition: service_healthy
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql-db:5432/app_user
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: postgres
+        CONFIG_SERVER_URL: http://config-server:8888
+        EUREKA_SERVER_URL: http://eureka-server:8761
