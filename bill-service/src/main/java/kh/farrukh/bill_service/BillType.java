@@ -1,4 +1,4 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill_service;
 
 public enum BillType {
     WATER,

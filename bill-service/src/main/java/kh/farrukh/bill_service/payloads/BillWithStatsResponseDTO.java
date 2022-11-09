@@ -1,8 +1,9 @@
-package kh.farrukh.bill.payloads;
+package kh.farrukh.bill_service.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.bill.Bill;
-import kh.farrukh.bill.BillType;
+import kh.farrukh.bill_service.Bill;
+import kh.farrukh.bill_service.BillType;
+import kh.farrukh.clients.stats.Stats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillResponseDTO {
+public class BillWithStatsResponseDTO {
 
     private Long id;
 
@@ -33,9 +34,15 @@ public class BillResponseDTO {
     @JsonProperty("owner_id")
     private Long ownerId;
 
-    private List<Long> stats = new ArrayList<>();
+    private List<Stats> stats = new ArrayList<>();
 
-    public BillResponseDTO(Bill bill) {
+//    @JsonIgnoreProperties("bill")
+//    @OneToMany(mappedBy = "bill", orphanRemoval = true)
+//    private List<Stats> stats = new ArrayList<>();
+
+
+    public BillWithStatsResponseDTO(Bill bill, List<Stats> stats) {
         BeanUtils.copyProperties(bill, this);
+        this.stats = stats;
     }
 }

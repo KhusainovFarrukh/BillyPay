@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bill
+    name: bill-service
   cloud:
     config:
       discovery:

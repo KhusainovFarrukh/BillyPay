@@ -1,8 +1,8 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill_service;
 
-import kh.farrukh.bill.payloads.BillRequestDTO;
-import kh.farrukh.bill.payloads.BillResponseDTO;
-import kh.farrukh.bill.payloads.BillWithStatsResponseDTO;
+import kh.farrukh.bill_service.payloads.BillRequestDTO;
+import kh.farrukh.bill_service.payloads.BillResponseDTO;
+import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 

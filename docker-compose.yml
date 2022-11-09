@@ -86,7 +86,7 @@ services:
     environment:
       EUREKA_SERVER_URL: http://eureka-server:8761
 
-  bill:
+  bill-service:
     image: farrukhkh/billy-pay-bill:1.0-SNAPSHOT
     container_name: billy-pay-bill
     build:

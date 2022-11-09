@@ -1,4 +1,4 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill_service;
 
 import kh.farrukh.common.exceptions.ApiException;
 import kh.farrukh.common.exceptions.ErrorResponse;

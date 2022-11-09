@@ -1,7 +1,7 @@
-package kh.farrukh.bill.payloads;
+package kh.farrukh.bill_service.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.bill.BillType;
+import kh.farrukh.bill_service.BillType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

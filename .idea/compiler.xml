@@ -11,9 +11,9 @@
         <module name="clients" />
         <module name="common" />
         <module name="stats" />
-        <module name="bill" />
         <module name="eureka-server" />
         <module name="user" />
+        <module name="bill-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -22,7 +22,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="bill" options="-parameters" />
+      <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="stats" options="-parameters" />

@@ -1,4 +1,4 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill_service;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;

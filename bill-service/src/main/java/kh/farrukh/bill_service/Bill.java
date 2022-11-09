@@ -1,6 +1,6 @@
-package kh.farrukh.bill;
+package kh.farrukh.bill_service;
 
-import kh.farrukh.bill.payloads.BillRequestDTO;
+import kh.farrukh.bill_service.payloads.BillRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
-import static kh.farrukh.bill.Constants.*;
+import static kh.farrukh.bill_service.Constants.*;
 
 @Entity
 @Table(name = TABLE_NAME_BILL,
