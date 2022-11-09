@@ -26,9 +26,8 @@ public class Bill {
 
     private Double price;
 
-//    @JsonIgnoreProperties("bills")
-//    @ManyToOne(optional = false)
-//    private AppUser owner;
+    @JsonProperty("owner_id")
+    private Long ownerId;
 
     private List<Long> stats = new ArrayList<>();
 

@@ -1,11 +1,14 @@
 package kh.farrukh.bill;
 
+import feign.FeignException;
 import kh.farrukh.bill.payloads.BillRequestDTO;
 import kh.farrukh.bill.payloads.BillResponseDTO;
 import kh.farrukh.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.clients.stats.Stats;
 import kh.farrukh.clients.stats.StatsClient;
+import kh.farrukh.clients.user.UserClient;
+import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
@@ -27,21 +30,36 @@ public class BillServiceImpl implements BillService {
 
     private final BillRepository billRepository;
     private final StatsClient statsClient;
+    private final UserClient userClient;
     private final CircuitBreakerFactory circuitBreakerFactory;
 //    private final UserRepository userRepository;
 
     @Override
     public PagingResponse<BillResponseDTO> getBills(
-//            Long ownerId,
+            Long ownerId,
             int page,
             int pageSize
     ) {
         checkPageNumber(page);
         // TODO: 8/18/22 check user
 //        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
-        return new PagingResponse<>(billRepository.findAll(
-                PageRequest.of(page - 1, pageSize)
-        ).map(BillResponseDTO::new));
+        if (ownerId == null) {
+            return new PagingResponse<>(billRepository.findAll(
+                    PageRequest.of(page - 1, pageSize)
+            ).map(BillResponseDTO::new));
+        } else {
+            try {
+                userClient.getUserById(ownerId);
+            } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
+                // TODO: 11/9/22 make it  work with circuit breaker
+                throw new ResourceNotFoundException("User", "id", ownerId);
+            }
+            return new PagingResponse<>(billRepository.findAllByOwnerId(
+                    ownerId,
+                    PageRequest.of(page - 1, pageSize)
+            ).map(BillResponseDTO::new));
+        }
+
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
 //            checkUserId(userRepository, ownerId);
 //            return new PagingResponse<>(billRepository.findAllByOwner_Id(
@@ -54,15 +72,27 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
-//            Long ownerId,
+            Long ownerId,
             int page,
             int pageSize
     ) {
         checkPageNumber(page);
         // TODO: 8/18/22 check user
 //        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
-        Page<Bill> billsPage = billRepository.findAll(PageRequest.of(page - 1, pageSize));
+        Page<Bill> billsPage;
+        if (ownerId == null) {
+            billsPage = billRepository.findAll(PageRequest.of(page - 1, pageSize));
+        } else {
+            try {
+                userClient.getUserById(ownerId);
+            } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
+                // TODO: 11/9/22 make it  work with circuit breaker
+                throw new ResourceNotFoundException("User", "id", ownerId);
+            }
+            billsPage = billRepository.findAllByOwnerId(ownerId, PageRequest.of(page - 1, pageSize));
+        }
 
+        // TODO: 11/8/22 why not to use constructor?
         PagingResponse<BillWithStatsResponseDTO> pagingResponse = new PagingResponse<>();
         pagingResponse.setPage(billsPage.getPageable().getPageNumber() + 1);
         pagingResponse.setTotalPages(billsPage.getTotalPages());
@@ -109,9 +139,15 @@ public class BillServiceImpl implements BillService {
     @Override
     public BillResponseDTO addBill(BillRequestDTO billDto) {
         // TODO: 8/18/22 check user
-//        if (billDto.getOwnerId() == null) {
-//            throw new BadRequestException("Owner ID");
-//        }
+        if (billDto.getOwnerId() == null) {
+            throw new BadRequestException("Owner ID");
+        }
+        try {
+            userClient.getUserById(billDto.getOwnerId());
+        } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
+            // TODO: 11/9/22 make it  work with circuit breaker
+            throw new ResourceNotFoundException("User", "id", billDto.getOwnerId());
+        }
 //        if (!CurrentUserUtils.isAdminOrAuthor(billDto.getOwnerId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }

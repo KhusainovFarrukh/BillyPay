@@ -9,13 +9,13 @@ import kh.farrukh.common.paging.PagingResponse;
 public interface BillService {
 
     PagingResponse<BillResponseDTO> getBills(
-//            Long ownerId,
+            Long ownerId,
             int pageNumber,
             int pageSize
     );
 
     PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
-//            Long ownerId,
+            Long ownerId,
             int pageNumber,
             int pageSize
     );

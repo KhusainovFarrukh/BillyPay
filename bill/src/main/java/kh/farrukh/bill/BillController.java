@@ -23,22 +23,20 @@ public class BillController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<BillResponseDTO>> getBills(
-//            @RequestParam(name = "owner_id", required = false) Long ownerId,
+            @RequestParam(name = "owner_id", required = false) Long ownerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-//        return new ResponseEntity<>(billService.getBills(ownerId, page, pageSize), HttpStatus.OK);
-        return new ResponseEntity<>(billService.getBills(page, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(billService.getBills(ownerId, page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("with-stats")
     public ResponseEntity<PagingResponse<BillWithStatsResponseDTO>> getBillsWithStats(
-//            @RequestParam(name = "owner_id", required = false) Long ownerId,
+            @RequestParam(name = "owner_id", required = false) Long ownerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-//        return new ResponseEntity<>(billService.getBills(ownerId, page, pageSize), HttpStatus.OK);
-        return new ResponseEntity<>(billService.getBillsWithStats(page, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(billService.getBillsWithStats(ownerId, page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")

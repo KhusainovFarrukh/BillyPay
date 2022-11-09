@@ -30,9 +30,9 @@ public class BillWithStatsResponseDTO {
 
     private Double price;
 
-//    @JsonIgnoreProperties("bills")
-//    @ManyToOne(optional = false)
-//    private AppUser owner;
+    // TODO: 11/8/22 response with user object
+    @JsonProperty("owner_id")
+    private Long ownerId;
 
     private List<Stats> stats = new ArrayList<>();
 

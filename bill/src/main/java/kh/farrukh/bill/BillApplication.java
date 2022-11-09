@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(basePackages = "kh.farrukh.clients")
 public class BillApplication {
 
-    // TODO: 8/18/22 connect to other services (user)
     // TODO: 8/18/22 add security
     // TODO: 8/18/22 full code refactor/review & apply best practices (microservices)
 

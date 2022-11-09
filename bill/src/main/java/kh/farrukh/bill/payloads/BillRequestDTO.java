@@ -28,6 +28,6 @@ public class BillRequestDTO {
     @Min(0)
     private Double price;
 
-//    @JsonProperty("owner_id")
-//    private Long ownerId;
+    @JsonProperty("owner_id")
+    private Long ownerId;
 }

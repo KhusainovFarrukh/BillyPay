@@ -1,6 +1,5 @@
 package kh.farrukh.bill;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import kh.farrukh.bill.payloads.BillRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +31,6 @@ public class Bill {
     private String address;
 
     @NotBlank
-    @JsonProperty("account_number")
     @Column(nullable = false, name = "account_number")
     private String accountNumber;
 
@@ -46,6 +44,9 @@ public class Bill {
 //    @JsonIgnoreProperties("bills")
 //    @ManyToOne(optional = false)
 //    private AppUser owner;
+
+    @Column(nullable = false)
+    private Long ownerId;
 
     @ElementCollection
     private List<Long> stats = new ArrayList<>();
