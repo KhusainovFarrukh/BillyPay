@@ -1,4 +1,4 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 public class Constants {
 

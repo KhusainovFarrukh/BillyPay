@@ -1,8 +1,8 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.stats.payloads.StatsRequestDTO;
-import kh.farrukh.stats.payloads.StatsResponseDTO;
+import kh.farrukh.stats_service.payloads.StatsRequestDTO;
+import kh.farrukh.stats_service.payloads.StatsResponseDTO;
 
 import java.util.List;
 

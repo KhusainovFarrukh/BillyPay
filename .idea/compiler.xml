@@ -10,7 +10,7 @@
         <module name="config-server" />
         <module name="clients" />
         <module name="common" />
-        <module name="stats" />
+        <module name="stats-service" />
         <module name="eureka-server" />
         <module name="user" />
         <module name="bill-service" />
@@ -25,7 +25,7 @@
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
-      <module name="stats" options="-parameters" />
+      <module name="stats-service" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>

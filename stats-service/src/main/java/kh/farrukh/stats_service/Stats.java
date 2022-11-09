@@ -1,7 +1,7 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.stats.payloads.StatsRequestDTO;
+import kh.farrukh.stats_service.payloads.StatsRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-import static kh.farrukh.stats.Constants.TABLE_NAME_STATS;
+import static kh.farrukh.stats_service.Constants.TABLE_NAME_STATS;
 
 @Entity
 @Table(name = TABLE_NAME_STATS)

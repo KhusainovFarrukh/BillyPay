@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "stats")
+@FeignClient(name = "stats-service")
 public interface StatsClient {
 
     // TODO: 8/20/22 use ENDPOINT_ constant

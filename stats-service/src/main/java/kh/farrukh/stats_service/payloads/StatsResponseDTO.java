@@ -1,29 +1,38 @@
-package kh.farrukh.stats.payloads;
+package kh.farrukh.stats_service.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kh.farrukh.stats_service.Stats;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatsRequestDTO {
-    @NotNull
+public class StatsResponseDTO {
+
+    private Long id;
+
     @JsonProperty("start_date")
     private LocalDate startDate;
 
     @JsonProperty("end_date")
     private LocalDate endDate;
 
-    @NotNull
-    @Min(0)
     private Double amount;
+
+    @JsonProperty("total_price")
+    private Double totalPrice;
 
     @JsonProperty("bill_id")
     private Long billId;
+
+    public StatsResponseDTO(Stats stats) {
+        BeanUtils.copyProperties(stats, this);
+    }
 }

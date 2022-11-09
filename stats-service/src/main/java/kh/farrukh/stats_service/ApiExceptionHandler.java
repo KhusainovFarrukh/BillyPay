@@ -1,4 +1,4 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 import kh.farrukh.common.exceptions.ApiException;
 import kh.farrukh.common.exceptions.ErrorResponse;

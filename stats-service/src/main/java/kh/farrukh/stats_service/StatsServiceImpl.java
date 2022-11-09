@@ -1,4 +1,4 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 import feign.FeignException;
 import kh.farrukh.clients.bill.Bill;
@@ -7,8 +7,8 @@ import kh.farrukh.clients.bill.StatsIdDTO;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.stats.payloads.StatsRequestDTO;
-import kh.farrukh.stats.payloads.StatsResponseDTO;
+import kh.farrukh.stats_service.payloads.StatsRequestDTO;
+import kh.farrukh.stats_service.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package kh.farrukh.stats;
+package kh.farrukh.stats_service;
 
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.stats.payloads.StatsRequestDTO;
-import kh.farrukh.stats.payloads.StatsResponseDTO;
+import kh.farrukh.stats_service.payloads.StatsRequestDTO;
+import kh.farrukh.stats_service.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static kh.farrukh.stats.Constants.ENDPOINT_STATS;
+import static kh.farrukh.stats_service.Constants.ENDPOINT_STATS;
 
 @RestController
 @RequestMapping(ENDPOINT_STATS)
