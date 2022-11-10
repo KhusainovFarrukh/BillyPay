@@ -1,5 +1,5 @@
 server.port: 8761
-spring.application.name: eureka-server
+spring.application.name: discovery-server
 
 eureka.client:
   fetch-registry: false

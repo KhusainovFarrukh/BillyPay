@@ -53,11 +53,11 @@ services:
       mysql-db:
         condition: service_healthy
 
-  eureka-server:
-    image: farrukhkh/billy-pay-eureka-server:1.0-SNAPSHOT
-    container_name: billy-pay-eureka-server
+  discovery-server:
+    image: farrukhkh/billy-pay-discovery-server:1.0-SNAPSHOT
+    container_name: billy-pay-discovery-server
     build:
-      context: ./eureka-server
+      context: ./discovery-server
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
@@ -76,7 +76,7 @@ services:
     ports:
       - "8090:8090"
     depends_on:
-      eureka-server:
+      discovery-server:
         condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
@@ -87,8 +87,8 @@ services:
       EUREKA_SERVER_URL: http://eureka-server:8761
 
   bill-service:
-    image: farrukhkh/billy-pay-bill:1.0-SNAPSHOT
-    container_name: billy-pay-bill
+    image: farrukhkh/billy-pay-bill-service:1.0-SNAPSHOT
+    container_name: billy-pay-bill-service
     build:
       context: ./bill-service
       dockerfile: Dockerfile
@@ -97,7 +97,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-      eureka-server:
+      discovery-server:
         condition: service_healthy
       postgresql-db:
         condition: service_healthy
@@ -109,19 +109,19 @@ services:
       EUREKA_SERVER_URL: http://eureka-server:8761
 
   stats-service:
-    image: farrukhkh/billy-pay-stats:1.0-SNAPSHOT
-    container_name: billy-pay-stats
+    image: farrukhkh/billy-pay-stats-service:1.0-SNAPSHOT
+    container_name: billy-pay-stats-service
     build:
       context: ./stats-service
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
     depends_on:
-        config-server:
-            condition: service_healthy
-        eureka-server:
-            condition: service_healthy
-        mysql-db:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mysql-db:
             condition: service_healthy
     environment:
         SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/stats
@@ -131,19 +131,19 @@ services:
         EUREKA_SERVER_URL: http://eureka-server:8761
 
   user-service:
-    image: farrukhkh/billy-pay-user:1.0-SNAPSHOT
-    container_name: billy-pay-user
+    image: farrukhkh/billy-pay-user-service:1.0-SNAPSHOT
+    container_name: billy-pay-user-service
     build:
       context: ./user-service
       dockerfile: Dockerfile
     ports:
         - "8082:8082"
     depends_on:
-        config-server:
-            condition: service_healthy
-        eureka-server:
-            condition: service_healthy
-        postgresql-db:
+      config-server:
+          condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      postgresql-db:
             condition: service_healthy
     environment:
         SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql-db:5432/app_user

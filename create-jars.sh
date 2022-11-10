@@ -1,7 +1,7 @@
 cd config-server
 mvn clean package -DskipTests
 
-cd ../eureka-server
+cd ../discovery-server
 mvn clean package -DskipTests
 
 cd ../bill-service

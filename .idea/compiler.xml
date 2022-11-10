@@ -9,10 +9,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
         <module name="clients" />
+        <module name="discovery-server" />
         <module name="common" />
         <module name="stats-service" />
         <module name="user-service" />
-        <module name="eureka-server" />
         <module name="bill-service" />
       </profile>
     </annotationProcessing>
@@ -24,7 +24,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
-      <module name="eureka-server" options="-parameters" />
+      <module name="discovery-server" options="-parameters" />
       <module name="stats-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
