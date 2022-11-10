@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.user_service.Constants.ENDPOINT_USER;
+import static kh.farrukh.user_service.Constants.*;
 
 /**
  * Controller that exposes endpoints for managing users
@@ -87,7 +87,7 @@ public class UserController {
      * @param roleDto This is the object that contains the role that we want to set the user to.
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
-    @PatchMapping("{id}/role")
+    @PatchMapping(ENDPOINT_POSTFIX_USER_ROLE)
     public ResponseEntity<AppUserResponseDTO> setUserRole(
             @PathVariable long id,
             @Valid @RequestBody UserRoleRequestDTO roleDto
@@ -118,7 +118,7 @@ public class UserController {
      * @param passwordDto This is the object that contains the current and new passwords.
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
-    @PatchMapping("{id}/password")
+    @PatchMapping(ENDPOINT_POSTFIX_USER_PASSWORD)
     public ResponseEntity<AppUserResponseDTO> setUserPassword(
             @PathVariable long id,
             @Valid @RequestBody UserPasswordRequestDTO passwordDto

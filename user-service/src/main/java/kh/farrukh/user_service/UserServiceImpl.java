@@ -13,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 
 /**
@@ -69,9 +67,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public AppUserResponseDTO getUserById(Long id) {
-        AppUser appUser = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
+        AppUser appUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
         return new AppUserResponseDTO(appUser);
     }
@@ -96,11 +93,9 @@ public class UserServiceImpl implements UserService {
      * @return The updated user.
      */
     @Override
-    @Transactional
     public AppUserResponseDTO updateUser(long id, AppUserRequestDTO appUserDto) {
-        AppUser existingAppUser = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
+        AppUser existingAppUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
 //        if (CurrentUserUtils.isAdminOrAuthor(id, userRepository)) {
 
@@ -123,7 +118,7 @@ public class UserServiceImpl implements UserService {
 //                () -> new ResourceNotFoundException("Image", "id", appUserDto.getImageId())
 //            ));
 
-        return new AppUserResponseDTO(existingAppUser);
+        return new AppUserResponseDTO(userRepository.save(existingAppUser));
 //        } else {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -136,7 +131,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(long id) {
-//        checkUserId(userRepository, id);
+        if (!userRepository.existsById(id)) throw new ResourceNotFoundException("User", "id", id);
         userRepository.deleteById(id);
     }
 
@@ -149,13 +144,11 @@ public class UserServiceImpl implements UserService {
      * @return The updated user.
      */
     @Override
-    @Transactional
     public AppUserResponseDTO setUserRole(long id, UserRoleRequestDTO roleDto) {
-        AppUser user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         user.setRole(roleDto.getRole());
-        return new AppUserResponseDTO(user);
+        return new AppUserResponseDTO(userRepository.save(user));
     }
 
     /**
@@ -193,16 +186,14 @@ public class UserServiceImpl implements UserService {
      * @return The updated user.
      */
     @Override
-    @Transactional
     public AppUserResponseDTO setUserPassword(long id, UserPasswordRequestDTO passwordDto) {
 //        if (CurrentUserUtils.isAdminOrAuthor(id, userRepository)) {
 
-        AppUser existingUser = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
+        AppUser existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         if (passwordEncoder.matches(passwordDto.getPassword(), existingUser.getPassword())) {
             existingUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-            return new AppUserResponseDTO(existingUser);
+            return new AppUserResponseDTO(userRepository.save(existingUser));
         } else {
             throw new BadRequestException("Password");
         }

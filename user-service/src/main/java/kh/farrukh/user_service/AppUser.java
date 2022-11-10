@@ -1,7 +1,6 @@
 package kh.farrukh.user_service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import kh.farrukh.user_service.payloads.AppUserRequestDTO;
 import lombok.AllArgsConstructor;
@@ -34,19 +33,16 @@ public class AppUser {
     private String email;
 
     @Column(name = "phone_number", nullable = false)
-    @JsonProperty("phone_number")
     private String phoneNumber;
 
     @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-    @JsonProperty("is_enabled")
     // TODO: 6/7/22 set default to false and implement phone verification OTP
     private boolean isEnabled = true;
 
     @Column
-    @JsonProperty("is_locked")
     private boolean isLocked = false;
 
     @Enumerated(EnumType.STRING)
