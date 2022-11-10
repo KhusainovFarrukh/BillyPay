@@ -4,11 +4,11 @@ mvn clean package -DskipTests
 cd ../eureka-server
 mvn clean package -DskipTests
 
-cd ../bill
+cd ../bill-service
 mvn clean package -DskipTests
 
-cd ../stats
+cd ../stats-service
 mvn clean package -DskipTests
 
-cd ../user
+cd ../user-service
 mvn clean package -DskipTests

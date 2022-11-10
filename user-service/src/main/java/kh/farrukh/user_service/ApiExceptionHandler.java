@@ -1,4 +1,4 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import kh.farrukh.common.exceptions.ApiException;
 import kh.farrukh.common.exceptions.ErrorResponse;

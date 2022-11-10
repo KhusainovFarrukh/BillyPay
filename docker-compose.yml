@@ -90,7 +90,7 @@ services:
     image: farrukhkh/billy-pay-bill:1.0-SNAPSHOT
     container_name: billy-pay-bill
     build:
-      context: ./bill
+      context: ./bill-service
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -112,7 +112,7 @@ services:
     image: farrukhkh/billy-pay-stats:1.0-SNAPSHOT
     container_name: billy-pay-stats
     build:
-      context: ./stats
+      context: ./stats-service
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
@@ -130,11 +130,11 @@ services:
         CONFIG_SERVER_URL: http://config-server:8888
         EUREKA_SERVER_URL: http://eureka-server:8761
 
-  user:
+  user-service:
     image: farrukhkh/billy-pay-user:1.0-SNAPSHOT
     container_name: billy-pay-user
     build:
-      context: ./user
+      context: ./user-service
       dockerfile: Dockerfile
     ports:
         - "8082:8082"

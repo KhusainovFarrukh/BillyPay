@@ -1,9 +1,9 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import kh.farrukh.user.payloads.AppUserRequestDTO;
+import kh.farrukh.user_service.payloads.AppUserRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import static kh.farrukh.user.Constants.*;
+import static kh.farrukh.user_service.Constants.*;
 
 @Getter
 @Setter

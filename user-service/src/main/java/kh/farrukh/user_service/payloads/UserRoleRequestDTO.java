@@ -1,6 +1,6 @@
-package kh.farrukh.user.payloads;
+package kh.farrukh.user_service.payloads;
 
-import kh.farrukh.user.UserRole;
+import kh.farrukh.user_service.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

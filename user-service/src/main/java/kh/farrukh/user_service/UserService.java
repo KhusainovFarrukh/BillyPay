@@ -1,10 +1,10 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.user.payloads.AppUserRequestDTO;
-import kh.farrukh.user.payloads.AppUserResponseDTO;
-import kh.farrukh.user.payloads.UserPasswordRequestDTO;
-import kh.farrukh.user.payloads.UserRoleRequestDTO;
+import kh.farrukh.user_service.payloads.AppUserRequestDTO;
+import kh.farrukh.user_service.payloads.AppUserResponseDTO;
+import kh.farrukh.user_service.payloads.UserPasswordRequestDTO;
+import kh.farrukh.user_service.payloads.UserRoleRequestDTO;
 
 /**
  * A base interface for service of User endpoints

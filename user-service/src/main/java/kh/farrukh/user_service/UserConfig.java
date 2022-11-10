@@ -1,4 +1,4 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,10 +1,10 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.user.payloads.AppUserRequestDTO;
-import kh.farrukh.user.payloads.AppUserResponseDTO;
-import kh.farrukh.user.payloads.UserPasswordRequestDTO;
-import kh.farrukh.user.payloads.UserRoleRequestDTO;
+import kh.farrukh.user_service.payloads.AppUserRequestDTO;
+import kh.farrukh.user_service.payloads.AppUserResponseDTO;
+import kh.farrukh.user_service.payloads.UserPasswordRequestDTO;
+import kh.farrukh.user_service.payloads.UserRoleRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.user.Constants.ENDPOINT_USER;
+import static kh.farrukh.user_service.Constants.ENDPOINT_USER;
 
 /**
  * Controller that exposes endpoints for managing users

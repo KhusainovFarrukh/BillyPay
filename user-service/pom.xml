@@ -11,10 +11,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>kh.farrukh</groupId>
-    <artifactId>user</artifactId>
+    <artifactId>user-service</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>User</name>
+    <name>User service</name>
     <description>User service for manipulating users data</description>
     <properties>
         <maven.compiler.source>18</maven.compiler.source>

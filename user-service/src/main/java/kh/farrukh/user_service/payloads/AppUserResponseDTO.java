@@ -1,8 +1,8 @@
-package kh.farrukh.user.payloads;
+package kh.farrukh.user_service.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.user.AppUser;
-import kh.farrukh.user.UserRole;
+import kh.farrukh.user_service.AppUser;
+import kh.farrukh.user_service.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

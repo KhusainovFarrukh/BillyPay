@@ -4,7 +4,7 @@
     <persistence-units>
       <persistence-unit name="Default">
         <packages>
-          <package value="kh.farrukh.user" />
+          <package value="kh.farrukh.user_service" />
         </packages>
       </persistence-unit>
     </persistence-units>

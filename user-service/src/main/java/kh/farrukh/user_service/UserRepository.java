@@ -1,4 +1,4 @@
-package kh.farrukh.user;
+package kh.farrukh.user_service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
