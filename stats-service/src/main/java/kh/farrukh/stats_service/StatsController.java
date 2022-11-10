@@ -26,24 +26,24 @@ public class StatsController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-        return new ResponseEntity<>(statsService.getStatsList(billId, page, pageSize), HttpStatus.OK);
+        return ResponseEntity.ok(statsService.getStatsList(billId, page, pageSize));
     }
 
     @GetMapping("of-bill")
     public ResponseEntity<List<StatsResponseDTO>> getAllStatsOfBill(
             @RequestParam(name = "bill_id") long billId
     ) {
-        return new ResponseEntity<>(statsService.getAllStatsOfBill(billId), HttpStatus.OK);
+        return ResponseEntity.ok(statsService.getAllStatsOfBill(billId));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<StatsResponseDTO> getStatsById(@PathVariable long id) {
-        return new ResponseEntity<>(statsService.getStatsById(id), HttpStatus.OK);
+        return ResponseEntity.ok(statsService.getStatsById(id));
     }
 
     @PostMapping
     public ResponseEntity<StatsResponseDTO> addStats(@Valid @RequestBody StatsRequestDTO statsDto) {
-        return new ResponseEntity<>(statsService.addStats(statsDto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(statsService.addStats(statsDto));
     }
 
     @PutMapping("{id}")
@@ -51,19 +51,19 @@ public class StatsController {
             @PathVariable long id,
             @Valid @RequestBody StatsRequestDTO statsDto
     ) {
-        return new ResponseEntity<>(statsService.updateStats(id, statsDto), HttpStatus.OK);
+        return ResponseEntity.ok(statsService.updateStats(id, statsDto));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteStats(@PathVariable long id) {
         statsService.deleteStatsById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteStatsByBillId(@RequestParam("bill_id") long billId) {
         statsService.deleteStatsByBillId(billId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping
@@ -72,6 +72,6 @@ public class StatsController {
             @RequestParam("price") Double price
     ) {
         statsService.updateTotalPriceOfStatsByBillId(billId, price);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

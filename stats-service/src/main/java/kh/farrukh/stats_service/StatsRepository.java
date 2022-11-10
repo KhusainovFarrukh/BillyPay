@@ -21,6 +21,6 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Stats s set s.totalPrice = s.amount * ?2 where s.billId = ?1")
+    @Query("update Stats stats set stats.totalPrice = stats.amount * :price where stats.billId = :billId")
     void updateTotalPriceByBillId(long billId, Double price);
 }

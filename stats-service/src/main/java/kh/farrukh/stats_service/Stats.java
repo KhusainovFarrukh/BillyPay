@@ -1,6 +1,5 @@
 package kh.farrukh.stats_service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import kh.farrukh.stats_service.payloads.StatsRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,20 +25,16 @@ public class Stats {
     private Long id;
 
     @Column(nullable = false)
-    @JsonProperty("start_date")
     private LocalDate startDate;
 
-    @JsonProperty("end_date")
     private LocalDate endDate;
 
     @Column(nullable = false)
     private Double amount;
 
     @Column(nullable = false)
-    @JsonProperty("total_price")
     private Double totalPrice;
 
-    @JsonProperty("bill_id")
     @Column(nullable = false)
     private Long billId;
 

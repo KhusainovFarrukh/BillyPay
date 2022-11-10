@@ -1,12 +1,12 @@
 package kh.farrukh.stats_service;
 
 import feign.FeignException;
-import kh.farrukh.feign_clients.bill.Bill;
-import kh.farrukh.feign_clients.bill.BillClient;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.feign_clients.bill.Bill;
+import kh.farrukh.feign_clients.bill.BillClient;
+import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.stats_service.payloads.StatsRequestDTO;
 import kh.farrukh.stats_service.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class StatsServiceImpl implements StatsService {
         } else {
             try {
                 billClient.getBillById(billId);
-            } catch (FeignException.NotFound e) {
+            } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
                 throw new ResourceNotFoundException("Bill", "id", billId);
             }
             return new PagingResponse<>(statsRepository.findAllByBillId(
@@ -75,9 +75,8 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public StatsResponseDTO getStatsById(long id) {
-        Stats stats = statsRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Stats", "id", id)
-        );
+        Stats stats = statsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
@@ -87,13 +86,11 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public StatsResponseDTO addStats(StatsRequestDTO statsDto) {
-        if (statsDto.getBillId() == null) {
-            throw new BadRequestException("Bill ID");
-        }
+        if (statsDto.getBillId() == null) throw new BadRequestException("Bill ID");
         Bill bill;
         try {
             bill = billClient.getBillById(statsDto.getBillId());
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", statsDto.getBillId());
         }
         // TODO: 8/18/22 add user check
@@ -107,14 +104,13 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public StatsResponseDTO updateStats(long id, StatsRequestDTO statsDto) {
-        Stats existingStats = statsRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Stats", "id", id)
-        );
+        Stats existingStats = statsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
 
         Bill bill;
         try {
             bill = billClient.getBillById(existingStats.getBillId());
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", existingStats.getBillId());
         }
 
@@ -133,24 +129,29 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public void deleteStatsById(long id) {
-        Stats stats = statsRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Stats", "id", id)
-        );
+        Stats stats = statsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
         try {
             billClient.deleteStatsFromBill(stats.getBillId(), new StatsIdDTO(id));
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", stats.getBillId());
         }
         statsRepository.deleteById(id);
     }
 
     @Override
+    // TODO: 11/10/22 why transactional?
     @Transactional
     public void deleteStatsByBillId(long billId) {
+        try {
+            billClient.getBillById(billId);
+        } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
+            throw new ResourceNotFoundException("Bill", "id", billId);
+        }
         statsRepository.deleteAllByBillId(billId);
     }
 
