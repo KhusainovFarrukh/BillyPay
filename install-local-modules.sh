@@ -1,5 +1,5 @@
 cd common
 mvn clean install
 
-cd ../clients
+cd ../feign-clients
 mvn clean install

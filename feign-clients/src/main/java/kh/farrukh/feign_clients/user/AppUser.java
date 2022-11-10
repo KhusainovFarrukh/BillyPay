@@ -1,4 +1,4 @@
-package kh.farrukh.clients.user;
+package kh.farrukh.feign_clients.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

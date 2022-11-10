@@ -1,4 +1,4 @@
-package kh.farrukh.clients.bill;
+package kh.farrukh.feign_clients.bill;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package kh.farrukh.clients.user;
+package kh.farrukh.feign_clients.user;
 
 public enum UserRole {
     SUPER_ADMIN,

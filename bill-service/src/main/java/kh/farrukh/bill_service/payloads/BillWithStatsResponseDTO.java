@@ -3,7 +3,7 @@ package kh.farrukh.bill_service.payloads;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kh.farrukh.bill_service.Bill;
 import kh.farrukh.bill_service.BillType;
-import kh.farrukh.clients.stats.Stats;
+import kh.farrukh.feign_clients.stats.Stats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package kh.farrukh.clients.stats;
+package kh.farrukh.feign_clients.stats;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

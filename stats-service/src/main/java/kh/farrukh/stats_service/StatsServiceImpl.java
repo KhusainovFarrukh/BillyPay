@@ -1,9 +1,9 @@
 package kh.farrukh.stats_service;
 
 import feign.FeignException;
-import kh.farrukh.clients.bill.Bill;
-import kh.farrukh.clients.bill.BillClient;
-import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.bill.Bill;
+import kh.farrukh.feign_clients.bill.BillClient;
+import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;

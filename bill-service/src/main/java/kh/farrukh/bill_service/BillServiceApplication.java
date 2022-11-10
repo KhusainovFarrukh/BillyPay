@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients(basePackages = "kh.farrukh.clients")
+@EnableFeignClients(basePackages = "kh.farrukh.feign_clients")
 public class BillServiceApplication {
 
     // TODO: 8/18/22 add security

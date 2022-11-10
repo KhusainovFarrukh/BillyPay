@@ -3,7 +3,7 @@ package kh.farrukh.bill_service;
 import kh.farrukh.bill_service.payloads.BillRequestDTO;
 import kh.farrukh.bill_service.payloads.BillResponseDTO;
 import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
-import kh.farrukh.clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

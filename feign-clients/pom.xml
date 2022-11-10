@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>kh.farrukh</groupId>
-    <artifactId>clients</artifactId>
+    <artifactId>feign-clients</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Clients</name>
+    <name>Feign clients</name>
     <description>OpenFeign clients for communication between services</description>
 
     <properties>

@@ -1,4 +1,4 @@
-package kh.farrukh.clients.stats;
+package kh.farrukh.feign_clients.stats;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;

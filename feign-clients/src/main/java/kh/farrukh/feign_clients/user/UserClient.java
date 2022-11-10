@@ -1,4 +1,4 @@
-package kh.farrukh.clients.user;
+package kh.farrukh.feign_clients.user;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
