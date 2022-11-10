@@ -4,14 +4,14 @@ import feign.FeignException;
 import kh.farrukh.bill_service.payloads.BillRequestDTO;
 import kh.farrukh.bill_service.payloads.BillResponseDTO;
 import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
-import kh.farrukh.feign_clients.stats.Stats;
-import kh.farrukh.feign_clients.stats.StatsClient;
-import kh.farrukh.feign_clients.user.UserClient;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.feign_clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.stats.Stats;
+import kh.farrukh.feign_clients.stats.StatsClient;
+import kh.farrukh.feign_clients.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -126,9 +126,8 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO getBillById(long id) {
-        Bill bill = billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-        );
+        Bill bill = billRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
         // TODO: 8/18/22 check user
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
@@ -139,9 +138,7 @@ public class BillServiceImpl implements BillService {
     @Override
     public BillResponseDTO addBill(BillRequestDTO billDto) {
         // TODO: 8/18/22 check user
-        if (billDto.getOwnerId() == null) {
-            throw new BadRequestException("Owner ID");
-        }
+        if (billDto.getOwnerId() == null) throw new BadRequestException("Owner ID");
         try {
             userClient.getUserById(billDto.getOwnerId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
@@ -160,9 +157,8 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO updateBill(long id, BillRequestDTO billDto) {
-        Bill existingBill = billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-        );
+        Bill existingBill = billRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
 
         // TODO: 8/18/22 check user
 //        if (!CurrentUserUtils.isAdminOrAuthor(existingBill.getOwner().getId(), userRepository)) {
@@ -188,10 +184,9 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void deleteBillById(long id) {
+        if (!billRepository.existsById(id)) throw new ResourceNotFoundException("Bill", "id", id);
+
         // TODO: 8/18/22 check user
-//        Bill bill = billRepository.findById(id).orElseThrow(
-//            () -> new ResourceNotFoundException("Bill", "id", id)
-//        );
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -203,9 +198,8 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO addStatsToBill(long id, StatsIdDTO statsIdDTO) {
-        Bill bill = billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-        );
+        Bill bill = billRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
 
         // TODO: 8/18/22 check user
 
@@ -218,9 +212,8 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO deleteStatsFromBill(long id, StatsIdDTO statsIdDTO) {
-        Bill bill = billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-        );
+        Bill bill = billRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
 
         // TODO: 8/18/22 check user
 

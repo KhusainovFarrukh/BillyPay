@@ -30,7 +30,6 @@ public class Bill {
 
     private String address;
 
-    @NotBlank
     @Column(nullable = false, name = "account_number")
     private String accountNumber;
 

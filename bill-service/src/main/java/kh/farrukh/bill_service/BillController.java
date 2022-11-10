@@ -3,8 +3,8 @@ package kh.farrukh.bill_service;
 import kh.farrukh.bill_service.payloads.BillRequestDTO;
 import kh.farrukh.bill_service.payloads.BillResponseDTO;
 import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class BillController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-        return new ResponseEntity<>(billService.getBills(ownerId, page, pageSize), HttpStatus.OK);
+        return ResponseEntity.ok(billService.getBills(ownerId, page, pageSize));
     }
 
     @GetMapping("with-stats")
@@ -36,21 +36,21 @@ public class BillController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-        return new ResponseEntity<>(billService.getBillsWithStats(ownerId, page, pageSize), HttpStatus.OK);
+        return ResponseEntity.ok(billService.getBillsWithStats(ownerId, page, pageSize));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<BillResponseDTO> getBillById(
             @PathVariable long id
     ) {
-        return new ResponseEntity<>(billService.getBillById(id), HttpStatus.OK);
+        return ResponseEntity.ok(billService.getBillById(id));
     }
 
     @PostMapping
     public ResponseEntity<BillResponseDTO> addBill(
             @Valid @RequestBody BillRequestDTO billDto
     ) {
-        return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(billService.addBill(billDto));
     }
 
     @PostMapping(ENDPOINT_POSTFIX_ADD_STATS_TO_BILL)
@@ -58,7 +58,7 @@ public class BillController {
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
-        return new ResponseEntity<>(billService.addStatsToBill(id, statsIdDTO), HttpStatus.OK);
+        return ResponseEntity.ok(billService.addStatsToBill(id, statsIdDTO));
     }
 
     @PostMapping(ENDPOINT_POSTFIX_DELETE_STATS_FROM_BILL)
@@ -66,7 +66,7 @@ public class BillController {
             @PathVariable long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
-        return new ResponseEntity<>(billService.deleteStatsFromBill(id, statsIdDTO), HttpStatus.OK);
+        return ResponseEntity.ok(billService.deleteStatsFromBill(id, statsIdDTO));
     }
 
     @PutMapping("{id}")
@@ -74,7 +74,7 @@ public class BillController {
             @PathVariable long id,
             @Valid @RequestBody BillRequestDTO billDto
     ) {
-        return new ResponseEntity<>(billService.updateBill(id, billDto), HttpStatus.OK);
+        return ResponseEntity.ok(billService.updateBill(id, billDto));
     }
 
     @DeleteMapping("{id}")
@@ -82,6 +82,6 @@ public class BillController {
             @PathVariable long id
     ) {
         billService.deleteBillById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
