@@ -1,4 +1,4 @@
-package kh.farrukh.feign_clients.bill;
+package kh.farrukh.feign_clients.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

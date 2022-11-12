@@ -1,14 +1,11 @@
-package kh.farrukh.bill_service.payloads;
+package kh.farrukh.feign_clients.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.bill_service.Bill;
-import kh.farrukh.bill_service.BillType;
 import kh.farrukh.feign_clients.stats.Stats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ public class BillWithStatsResponseDTO {
     @JsonProperty("account_number")
     private String accountNumber;
 
-    private BillType type;
+    private BillTypeDTO type;
 
     private Double price;
 
@@ -39,10 +36,4 @@ public class BillWithStatsResponseDTO {
 //    @JsonIgnoreProperties("bill")
 //    @OneToMany(mappedBy = "bill", orphanRemoval = true)
 //    private List<Stats> stats = new ArrayList<>();
-
-
-    public BillWithStatsResponseDTO(Bill bill, List<Stats> stats) {
-        BeanUtils.copyProperties(bill, this);
-        this.stats = stats;
-    }
 }

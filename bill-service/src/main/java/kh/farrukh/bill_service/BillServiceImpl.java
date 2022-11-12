@@ -1,14 +1,14 @@
 package kh.farrukh.bill_service;
 
 import feign.FeignException;
-import kh.farrukh.bill_service.payloads.BillRequestDTO;
-import kh.farrukh.bill_service.payloads.BillResponseDTO;
-import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import kh.farrukh.feign_clients.stats.Stats;
 import kh.farrukh.feign_clients.stats.StatsClient;
 import kh.farrukh.feign_clients.user.UserClient;
@@ -32,7 +32,6 @@ public class BillServiceImpl implements BillService {
     private final StatsClient statsClient;
     private final UserClient userClient;
     private final CircuitBreakerFactory circuitBreakerFactory;
-//    private final UserRepository userRepository;
 
     @Override
     public PagingResponse<BillResponseDTO> getBills(
@@ -46,7 +45,7 @@ public class BillServiceImpl implements BillService {
         if (ownerId == null) {
             return new PagingResponse<>(billRepository.findAll(
                     PageRequest.of(page - 1, pageSize)
-            ).map(BillResponseDTO::new));
+            ).map(BillMappers::toBillResponseDTO));
         } else {
             try {
                 userClient.getUserById(ownerId);
@@ -57,7 +56,7 @@ public class BillServiceImpl implements BillService {
             return new PagingResponse<>(billRepository.findAllByOwnerId(
                     ownerId,
                     PageRequest.of(page - 1, pageSize)
-            ).map(BillResponseDTO::new));
+            ).map(BillMappers::toBillResponseDTO));
         }
 
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
@@ -111,7 +110,7 @@ public class BillServiceImpl implements BillService {
                     () -> statsClient.getAllStatsOfBill(bill.getId()),
                     (throwable) -> Collections.emptyList()
             );
-            pagingResponse.getItems().add(new BillWithStatsResponseDTO(bill, stats));
+            pagingResponse.getItems().add(BillMappers.toBillWithStatsResponseDTO(bill, stats));
         });
 //        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
 //            checkUserId(userRepository, ownerId);
@@ -126,37 +125,37 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO getBillById(long id) {
-        Bill bill = billRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
         // TODO: 8/18/22 check user
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        return new BillResponseDTO(bill);
+        return billRepository.findById(id)
+                .map(BillMappers::toBillResponseDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
     }
 
     @Override
-    public BillResponseDTO addBill(BillRequestDTO billDto) {
+    public BillResponseDTO addBill(BillRequestDTO billRequestDTO) {
         // TODO: 8/18/22 check user
-        if (billDto.getOwnerId() == null) throw new BadRequestException("Owner ID");
+        if (billRequestDTO.getOwnerId() == null) throw new BadRequestException("Owner ID");
         try {
-            userClient.getUserById(billDto.getOwnerId());
+            userClient.getUserById(billRequestDTO.getOwnerId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             // TODO: 11/9/22 make it  work with circuit breaker
-            throw new ResourceNotFoundException("User", "id", billDto.getOwnerId());
+            throw new ResourceNotFoundException("User", "id", billRequestDTO.getOwnerId());
         }
 //        if (!CurrentUserUtils.isAdminOrAuthor(billDto.getOwnerId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        if (billRepository.existsByAccountNumber(billDto.getAccountNumber())) {
-            throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
+        if (billRepository.existsByAccountNumber(billRequestDTO.getAccountNumber())) {
+            throw new DuplicateResourceException("Bill", "account number", billRequestDTO.getAccountNumber());
         }
 //        return billRepository.save(new Bill(billDto, userRepository));
-        return new BillResponseDTO(billRepository.save(new Bill(billDto)));
+        return BillMappers.toBillResponseDTO(billRepository.save(BillMappers.toBill(billRequestDTO)));
     }
 
     @Override
-    public BillResponseDTO updateBill(long id, BillRequestDTO billDto) {
+    public BillResponseDTO updateBill(long id, BillRequestDTO billRequestDTO) {
         Bill existingBill = billRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
 
@@ -165,21 +164,21 @@ public class BillServiceImpl implements BillService {
 //            throw new NotEnoughPermissionException();
 //        }
 
-        if (!billDto.getAccountNumber().equals(existingBill.getAccountNumber()) &&
-                billRepository.existsByAccountNumber(billDto.getAccountNumber())) {
-            throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
+        if (!billRequestDTO.getAccountNumber().equals(existingBill.getAccountNumber()) &&
+                billRepository.existsByAccountNumber(billRequestDTO.getAccountNumber())) {
+            throw new DuplicateResourceException("Bill", "account number", billRequestDTO.getAccountNumber());
         }
 
-        if (!billDto.getPrice().equals(existingBill.getPrice())) {
-            statsClient.updateTotalPriceOfStatsByBillId(id, billDto.getPrice());
+        if (!billRequestDTO.getPrice().equals(existingBill.getPrice())) {
+            statsClient.updateTotalPriceOfStatsByBillId(id, billRequestDTO.getPrice());
         }
 
-        existingBill.setAddress(billDto.getAddress());
-        existingBill.setAccountNumber(billDto.getAccountNumber());
-        existingBill.setType(billDto.getType());
-        existingBill.setPrice(billDto.getPrice());
+        existingBill.setAddress(billRequestDTO.getAddress());
+        existingBill.setAccountNumber(billRequestDTO.getAccountNumber());
+        existingBill.setType(BillMappers.toBillType(billRequestDTO.getType()));
+        existingBill.setPrice(billRequestDTO.getPrice());
 
-        return new BillResponseDTO(billRepository.save(existingBill));
+        return BillMappers.toBillResponseDTO(billRepository.save(existingBill));
     }
 
     @Override
@@ -207,7 +206,7 @@ public class BillServiceImpl implements BillService {
         newStats.add(statsIdDTO.getStatsId());
         bill.setStats(newStats);
 
-        return new BillResponseDTO(billRepository.save(bill));
+        return BillMappers.toBillResponseDTO(billRepository.save(bill));
     }
 
     @Override
@@ -221,6 +220,6 @@ public class BillServiceImpl implements BillService {
         newStats.remove(statsIdDTO.getStatsId());
         bill.setStats(newStats);
 
-        return new BillResponseDTO(billRepository.save(bill));
+        return BillMappers.toBillResponseDTO(billRepository.save(bill));
     }
 }

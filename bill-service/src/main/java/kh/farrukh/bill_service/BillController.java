@@ -1,10 +1,10 @@
 package kh.farrukh.bill_service;
 
-import kh.farrukh.bill_service.payloads.BillRequestDTO;
-import kh.farrukh.bill_service.payloads.BillResponseDTO;
-import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.bill_service.Constants.*;
+import static kh.farrukh.feign_clients.bill.Constants.*;
 
 @RestController
 @RequestMapping(ENDPOINT_BILL)
@@ -23,25 +23,25 @@ public class BillController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<BillResponseDTO>> getBills(
-            @RequestParam(name = "owner_id", required = false) Long ownerId,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "page_size", defaultValue = "10") int pageSize
+            @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
+            @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
+            @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
         return ResponseEntity.ok(billService.getBills(ownerId, page, pageSize));
     }
 
-    @GetMapping("with-stats")
+    @GetMapping(ENDPOINT_POSTFIX_GET_BILLS_WITH_STATS)
     public ResponseEntity<PagingResponse<BillWithStatsResponseDTO>> getBillsWithStats(
-            @RequestParam(name = "owner_id", required = false) Long ownerId,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "page_size", defaultValue = "10") int pageSize
+            @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
+            @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
+            @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
         return ResponseEntity.ok(billService.getBillsWithStats(ownerId, page, pageSize));
     }
 
-    @GetMapping("{id}")
+    @GetMapping(ENDPOINT_POSTFIX_ID)
     public ResponseEntity<BillResponseDTO> getBillById(
-            @PathVariable long id
+            @PathVariable(PARAM_ID) long id
     ) {
         return ResponseEntity.ok(billService.getBillById(id));
     }
@@ -55,7 +55,7 @@ public class BillController {
 
     @PostMapping(ENDPOINT_POSTFIX_ADD_STATS_TO_BILL)
     public ResponseEntity<BillResponseDTO> addStatsToBill(
-            @PathVariable long id,
+            @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
         return ResponseEntity.ok(billService.addStatsToBill(id, statsIdDTO));
@@ -63,23 +63,23 @@ public class BillController {
 
     @PostMapping(ENDPOINT_POSTFIX_DELETE_STATS_FROM_BILL)
     public ResponseEntity<BillResponseDTO> deleteStatsFromBill(
-            @PathVariable long id,
+            @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody StatsIdDTO statsIdDTO
     ) {
         return ResponseEntity.ok(billService.deleteStatsFromBill(id, statsIdDTO));
     }
 
-    @PutMapping("{id}")
+    @PutMapping(ENDPOINT_POSTFIX_ID)
     public ResponseEntity<BillResponseDTO> updateBill(
-            @PathVariable long id,
+            @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody BillRequestDTO billDto
     ) {
         return ResponseEntity.ok(billService.updateBill(id, billDto));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(ENDPOINT_POSTFIX_ID)
     public ResponseEntity<Void> deleteBill(
-            @PathVariable long id
+            @PathVariable(PARAM_ID) long id
     ) {
         billService.deleteBillById(id);
         return ResponseEntity.noContent().build();

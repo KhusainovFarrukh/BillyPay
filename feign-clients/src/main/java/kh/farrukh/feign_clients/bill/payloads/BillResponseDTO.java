@@ -1,4 +1,4 @@
-package kh.farrukh.feign_clients.bill;
+package kh.farrukh.feign_clients.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Bill {
+@NoArgsConstructor
+public class BillResponseDTO {
 
     private Long id;
 
@@ -22,16 +22,13 @@ public class Bill {
     @JsonProperty("account_number")
     private String accountNumber;
 
-    private BillType type;
+    private BillTypeDTO type;
 
     private Double price;
 
+    // TODO: 11/8/22 response with user object
     @JsonProperty("owner_id")
     private Long ownerId;
 
     private List<Long> stats = new ArrayList<>();
-
-//    @JsonIgnoreProperties("bill")
-//    @OneToMany(mappedBy = "bill", orphanRemoval = true)
-//    private List<Stats> stats = new ArrayList<>();
 }

@@ -1,6 +1,6 @@
 package kh.farrukh.bill_service;
 
-import kh.farrukh.bill_service.payloads.BillRequestDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +59,4 @@ public class Bill {
 //            () -> new ResourceNotFoundException("User", "id", billDTO.getOwnerId())
 //        );
 //    }
-
-    public Bill(BillRequestDTO billDTO) {
-        BeanUtils.copyProperties(billDTO, this);
-    }
 }

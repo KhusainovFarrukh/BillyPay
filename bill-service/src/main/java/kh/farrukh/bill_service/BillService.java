@@ -1,10 +1,10 @@
 package kh.farrukh.bill_service;
 
-import kh.farrukh.bill_service.payloads.BillRequestDTO;
-import kh.farrukh.bill_service.payloads.BillResponseDTO;
-import kh.farrukh.bill_service.payloads.BillWithStatsResponseDTO;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
 import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 
 public interface BillService {
 
@@ -22,9 +22,9 @@ public interface BillService {
 
     BillResponseDTO getBillById(long id);
 
-    BillResponseDTO addBill(BillRequestDTO billDTO);
+    BillResponseDTO addBill(BillRequestDTO billRequestDTO);
 
-    BillResponseDTO updateBill(long id, BillRequestDTO billDTO);
+    BillResponseDTO updateBill(long id, BillRequestDTO billRequestDTO);
 
     void deleteBillById(long id);
 

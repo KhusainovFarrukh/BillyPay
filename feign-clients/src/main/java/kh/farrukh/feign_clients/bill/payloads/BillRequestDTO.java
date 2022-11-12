@@ -1,7 +1,6 @@
-package kh.farrukh.bill_service.payloads;
+package kh.farrukh.feign_clients.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.bill_service.BillType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class BillRequestDTO {
     private String accountNumber;
 
     @NotNull
-    private BillType type;
+    private BillTypeDTO type;
 
     @NotNull
     @Min(0)

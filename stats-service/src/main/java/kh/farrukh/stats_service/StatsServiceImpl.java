@@ -4,9 +4,9 @@ import feign.FeignException;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.feign_clients.bill.Bill;
 import kh.farrukh.feign_clients.bill.BillClient;
-import kh.farrukh.feign_clients.bill.StatsIdDTO;
+import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
+import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import kh.farrukh.stats_service.payloads.StatsRequestDTO;
 import kh.farrukh.stats_service.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
     private final BillClient billClient;
-//    private final UserRepository userRepository;
 
     @Override
     public PagingResponse<StatsResponseDTO> getStatsList(
@@ -87,7 +86,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public StatsResponseDTO addStats(StatsRequestDTO statsDto) {
         if (statsDto.getBillId() == null) throw new BadRequestException("Bill ID");
-        Bill bill;
+        BillResponseDTO bill;
         try {
             bill = billClient.getBillById(statsDto.getBillId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
@@ -107,7 +106,7 @@ public class StatsServiceImpl implements StatsService {
         Stats existingStats = statsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
 
-        Bill bill;
+        BillResponseDTO bill;
         try {
             bill = billClient.getBillById(existingStats.getBillId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
