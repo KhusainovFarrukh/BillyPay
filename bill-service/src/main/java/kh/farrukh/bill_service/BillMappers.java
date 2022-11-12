@@ -4,7 +4,7 @@ import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillTypeDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
-import kh.farrukh.feign_clients.stats.Stats;
+import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class BillMappers {
         return billResponseDTO;
     }
 
-    public static BillWithStatsResponseDTO toBillWithStatsResponseDTO(Bill bill, List<Stats> stats) {
+    public static BillWithStatsResponseDTO toBillWithStatsResponseDTO(Bill bill, List<StatsResponseDTO> stats) {
         BillWithStatsResponseDTO billWithStatsResponseDTO = new BillWithStatsResponseDTO();
         BeanUtils.copyProperties(bill, billWithStatsResponseDTO);
         billWithStatsResponseDTO.setType(toBillTypeDTO(bill.getType()));

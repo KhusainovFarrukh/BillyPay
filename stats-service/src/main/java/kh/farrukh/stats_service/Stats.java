@@ -1,11 +1,9 @@
 package kh.farrukh.stats_service;
 
-import kh.farrukh.stats_service.payloads.StatsRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -41,17 +39,4 @@ public class Stats {
 //    @JsonIgnoreProperties("stats")
 //    @ManyToOne(optional = false)
 //    private Bill bill;
-
-//    public Stats(StatsDTO billDTO, BillRepository billRepository) {
-//        BeanUtils.copyProperties(billDTO, this);
-//        this.bill = billRepository.findById(billDTO.getBillId()).orElseThrow(
-//                () -> new ResourceNotFoundException("Bill", "id", billDTO.getBillId())
-//        );
-//        this.totalPrice = this.amount * this.bill.getPrice();
-//    }
-
-    public Stats(StatsRequestDTO billDTO, Double price) {
-        BeanUtils.copyProperties(billDTO, this);
-        this.totalPrice = this.amount * price;
-    }
 }

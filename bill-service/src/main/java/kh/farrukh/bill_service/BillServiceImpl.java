@@ -9,8 +9,8 @@ import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
-import kh.farrukh.feign_clients.stats.Stats;
 import kh.farrukh.feign_clients.stats.StatsClient;
+import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import kh.farrukh.feign_clients.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
@@ -106,7 +106,7 @@ public class BillServiceImpl implements BillService {
         CircuitBreaker circuitBreaker = circuitBreakerFactory.create("get-stats-of-bill");
 
         billsPage.forEach(bill -> {
-            List<Stats> stats = circuitBreaker.run(
+            List<StatsResponseDTO> stats = circuitBreaker.run(
                     () -> statsClient.getAllStatsOfBill(bill.getId()),
                     (throwable) -> Collections.emptyList()
             );

@@ -7,8 +7,8 @@ import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.feign_clients.bill.BillClient;
 import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
-import kh.farrukh.stats_service.payloads.StatsRequestDTO;
-import kh.farrukh.stats_service.payloads.StatsResponseDTO;
+import kh.farrukh.feign_clients.stats.payloads.StatsRequestDTO;
+import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class StatsServiceImpl implements StatsService {
         if (billId == null) {
             return new PagingResponse<>(statsRepository.findAll(
                     PageRequest.of(page - 1, pageSize)
-            ).map(StatsResponseDTO::new));
+            ).map(StatsMappers::toStatsResponseDTO));
         } else {
             try {
                 billClient.getBillById(billId);
@@ -44,7 +44,7 @@ public class StatsServiceImpl implements StatsService {
             }
             return new PagingResponse<>(statsRepository.findAllByBillId(
                     billId, PageRequest.of(page - 1, pageSize)
-            ).map(StatsResponseDTO::new));
+            ).map(StatsMappers::toStatsResponseDTO));
         }
         // TODO: 8/18/22 add user check
 //        if (billId == null && CurrentUserUtils.isAdmin(userRepository)) {
@@ -69,40 +69,41 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<StatsResponseDTO> getAllStatsOfBill(long billId) {
-        return statsRepository.findAllByBillId(billId).stream().map(StatsResponseDTO::new).toList();
+        return statsRepository.findAllByBillId(billId)
+                .stream().map(StatsMappers::toStatsResponseDTO).toList();
     }
 
     @Override
     public StatsResponseDTO getStatsById(long id) {
-        Stats stats = statsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(stats.getBill().getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        return new StatsResponseDTO(stats);
+        return statsRepository.findById(id)
+                .map(StatsMappers::toStatsResponseDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
     }
 
     @Override
-    public StatsResponseDTO addStats(StatsRequestDTO statsDto) {
-        if (statsDto.getBillId() == null) throw new BadRequestException("Bill ID");
+    public StatsResponseDTO addStats(StatsRequestDTO statsRequestDTO) {
+        if (statsRequestDTO.getBillId() == null) throw new BadRequestException("Bill ID");
         BillResponseDTO bill;
         try {
-            bill = billClient.getBillById(statsDto.getBillId());
+            bill = billClient.getBillById(statsRequestDTO.getBillId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
-            throw new ResourceNotFoundException("Bill", "id", statsDto.getBillId());
+            throw new ResourceNotFoundException("Bill", "id", statsRequestDTO.getBillId());
         }
         // TODO: 8/18/22 add user check
 //        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
 //            throw new NotEnoughPermissionException();
 //        }
-        Stats stats = statsRepository.save(new Stats(statsDto, bill.getPrice()));
-        billClient.addStatsToBill(statsDto.getBillId(), new StatsIdDTO(stats.getId()));
-        return new StatsResponseDTO(stats);
+        Stats stats = statsRepository.save(StatsMappers.toStats(statsRequestDTO, bill.getPrice()));
+        billClient.addStatsToBill(statsRequestDTO.getBillId(), new StatsIdDTO(stats.getId()));
+        return StatsMappers.toStatsResponseDTO(stats);
     }
 
     @Override
-    public StatsResponseDTO updateStats(long id, StatsRequestDTO statsDto) {
+    public StatsResponseDTO updateStats(long id, StatsRequestDTO statsRequestDTO) {
         Stats existingStats = statsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
 
@@ -118,12 +119,12 @@ public class StatsServiceImpl implements StatsService {
 //            throw new NotEnoughPermissionException();
 //        }
 
-        existingStats.setAmount(statsDto.getAmount());
-        existingStats.setTotalPrice(statsDto.getAmount() * bill.getPrice());
-        existingStats.setStartDate(statsDto.getStartDate());
-        existingStats.setEndDate(statsDto.getEndDate());
+        existingStats.setAmount(statsRequestDTO.getAmount());
+        existingStats.setTotalPrice(statsRequestDTO.getAmount() * bill.getPrice());
+        existingStats.setStartDate(statsRequestDTO.getStartDate());
+        existingStats.setEndDate(statsRequestDTO.getEndDate());
 
-        return new StatsResponseDTO(statsRepository.save(existingStats));
+        return StatsMappers.toStatsResponseDTO(statsRepository.save(existingStats));
     }
 
     @Override

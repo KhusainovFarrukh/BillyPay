@@ -1,30 +1,50 @@
 package kh.farrukh.feign_clients.stats;
 
+import kh.farrukh.common.paging.PagingResponse;
+import kh.farrukh.feign_clients.stats.payloads.StatsRequestDTO;
+import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@FeignClient(name = "stats-service")
+import static kh.farrukh.feign_clients.stats.Constants.*;
+
+@FeignClient(name = "stats-service", path = ENDPOINT_STATS)
 public interface StatsClient {
 
-    // TODO: 8/20/22 use ENDPOINT_ constant
-    @GetMapping("api/v1/stats/of-bill")
-    List<Stats> getAllStatsOfBill(
-            @RequestParam(name = "bill_id") Long billId
+    @GetMapping
+    PagingResponse<StatsResponseDTO> getStatsList(
+            @RequestParam(name = PARAM_BILL_ID, required = false) Long billId,
+            @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
+            @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     );
 
-    // TODO: 8/20/22 use ENDPOINT_ constant
-    @DeleteMapping("api/v1/stats")
-    void deleteStatsByBillId(@RequestParam("bill_id") long billId);
+    @GetMapping(ENDPOINT_POSTFIX_OF_BILL)
+    List<StatsResponseDTO> getAllStatsOfBill(@RequestParam(name = PARAM_BILL_ID) Long billId);
 
-    // TODO: 8/20/22 use ENDPOINT_ constant
-    @PutMapping("api/v1/stats")
+    @GetMapping(ENDPOINT_POSTFIX_ID)
+    StatsResponseDTO getStatsById(@PathVariable(PARAM_ID) long id);
+
+    @PostMapping
+    StatsResponseDTO addStats(@Valid @RequestBody StatsRequestDTO statsDto);
+
+    @PutMapping(ENDPOINT_POSTFIX_ID)
+    StatsResponseDTO updateStats(
+            @PathVariable(PARAM_ID) long id,
+            @Valid @RequestBody StatsRequestDTO statsDto
+    );
+
+    @DeleteMapping(ENDPOINT_POSTFIX_ID)
+    void deleteStats(@PathVariable(PARAM_ID) long id);
+
+    @DeleteMapping
+    void deleteStatsByBillId(@RequestParam(PARAM_BILL_ID) long billId);
+
+    @PutMapping
     void updateTotalPriceOfStatsByBillId(
-            @RequestParam("bill_id") long billId,
-            @RequestParam("price") Double price
+            @RequestParam(PARAM_BILL_ID) long billId,
+            @RequestParam(PARAM_PRICE) Double price
     );
 }

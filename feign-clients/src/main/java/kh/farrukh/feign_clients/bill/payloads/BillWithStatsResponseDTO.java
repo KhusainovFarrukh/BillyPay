@@ -1,7 +1,7 @@
 package kh.farrukh.feign_clients.bill.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kh.farrukh.feign_clients.stats.Stats;
+import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class BillWithStatsResponseDTO {
     @JsonProperty("owner_id")
     private Long ownerId;
 
-    private List<Stats> stats = new ArrayList<>();
+    private List<StatsResponseDTO> stats = new ArrayList<>();
 
 //    @JsonIgnoreProperties("bill")
 //    @OneToMany(mappedBy = "bill", orphanRemoval = true)
