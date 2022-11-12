@@ -14,6 +14,7 @@
         <module name="stats-service" />
         <module name="user-service" />
         <module name="bill-service" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -25,6 +26,7 @@
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="stats-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

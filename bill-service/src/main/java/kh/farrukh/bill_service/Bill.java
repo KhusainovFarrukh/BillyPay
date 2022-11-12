@@ -1,11 +1,9 @@
 package kh.farrukh.bill_service;
 
-import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
