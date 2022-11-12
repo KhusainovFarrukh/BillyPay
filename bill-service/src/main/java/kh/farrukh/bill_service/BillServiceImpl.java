@@ -9,6 +9,8 @@ import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
+import kh.farrukh.feign_clients.notification.NotificationClient;
+import kh.farrukh.feign_clients.notification.payloads.NotificationRequestDTO;
 import kh.farrukh.feign_clients.stats.StatsClient;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import kh.farrukh.feign_clients.user.UserClient;
@@ -31,6 +33,7 @@ public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
     private final StatsClient statsClient;
     private final UserClient userClient;
+    private final NotificationClient notificationClient;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
@@ -171,6 +174,12 @@ public class BillServiceImpl implements BillService {
 
         if (!billRequestDTO.getPrice().equals(existingBill.getPrice())) {
             statsClient.updateTotalPriceOfStatsByBillId(id, billRequestDTO.getPrice());
+            notificationClient.sendNotification(
+                    new NotificationRequestDTO(
+                            "Price of bill with account number " + existingBill.getAccountNumber() + " was changed from " + existingBill.getPrice() + " to " + billRequestDTO.getPrice(),
+                            existingBill.getOwnerId()
+                    )
+            );
         }
 
         existingBill.setAddress(billRequestDTO.getAddress());
