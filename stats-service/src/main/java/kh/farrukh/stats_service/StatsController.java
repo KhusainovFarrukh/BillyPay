@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static kh.farrukh.feign_clients.stats.Constants.*;
+import static kh.farrukh.feign_clients.stats.StatsConstants.*;
 
 @RestController
 @RequestMapping(ENDPOINT_STATS)

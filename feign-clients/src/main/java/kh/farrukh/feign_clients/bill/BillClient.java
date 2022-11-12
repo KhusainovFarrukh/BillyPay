@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.feign_clients.bill.Constants.*;
+import static kh.farrukh.feign_clients.bill.BillConstants.*;
 
 @FeignClient(name = "bill-service", path = ENDPOINT_BILL)
 public interface BillClient {

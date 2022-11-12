@@ -1,8 +1,17 @@
-package kh.farrukh.feign_clients.user;
+package kh.farrukh.feign_clients.user.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class AppUser {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AppUserResponseDTO {
+
     private long id;
 
     private String name;
@@ -19,5 +28,5 @@ public class AppUser {
     @JsonProperty("is_locked")
     private boolean isLocked = false;
 
-    private UserRole role;
+    private UserRoleDTO role;
 }

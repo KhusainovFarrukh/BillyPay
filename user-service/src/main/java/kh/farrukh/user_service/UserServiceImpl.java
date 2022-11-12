@@ -4,10 +4,10 @@ import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.user_service.payloads.AppUserRequestDTO;
-import kh.farrukh.user_service.payloads.AppUserResponseDTO;
-import kh.farrukh.user_service.payloads.UserPasswordRequestDTO;
-import kh.farrukh.user_service.payloads.UserRoleRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.AppUserRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.AppUserResponseDTO;
+import kh.farrukh.feign_clients.user.payloads.UserPasswordRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.UserRoleRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final ImageRepository imageRepository;
 
     /**
      * If the user exists in the database, return the user, otherwise throw an exception.
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
         checkPageNumber(page);
         return new PagingResponse<>(userRepository.findAll(
                 PageRequest.of(page - 1, pageSize)
-        ).map(AppUserResponseDTO::new));
+        ).map(UserMappers::toAppUserResponseDTO));
     }
 
     /**
@@ -67,10 +66,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public AppUserResponseDTO getUserById(Long id) {
-        AppUser appUser = userRepository.findById(id)
+        return userRepository.findById(id)
+                .map(UserMappers::toAppUserResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-
-        return new AppUserResponseDTO(appUser);
     }
 
     @Override
@@ -79,9 +77,7 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateResourceException("User", "phone number", userRequestDTO.getPhoneNumber());
         }
 
-        AppUser appUser = userRepository.save(new AppUser(userRequestDTO));
-
-        return new AppUserResponseDTO(appUser);
+        return UserMappers.toAppUserResponseDTO(userRepository.save(UserMappers.toAppUser(userRequestDTO)));
     }
 
     /**
@@ -118,7 +114,7 @@ public class UserServiceImpl implements UserService {
 //                () -> new ResourceNotFoundException("Image", "id", appUserDto.getImageId())
 //            ));
 
-        return new AppUserResponseDTO(userRepository.save(existingAppUser));
+        return UserMappers.toAppUserResponseDTO(userRepository.save(existingAppUser));
 //        } else {
 //            throw new NotEnoughPermissionException();
 //        }
@@ -147,8 +143,8 @@ public class UserServiceImpl implements UserService {
     public AppUserResponseDTO setUserRole(long id, UserRoleRequestDTO roleDto) {
         AppUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-        user.setRole(roleDto.getRole());
-        return new AppUserResponseDTO(userRepository.save(user));
+        user.setRole(UserMappers.toUserRole(roleDto.getRole()));
+        return UserMappers.toAppUserResponseDTO(userRepository.save(user));
     }
 
     /**
@@ -193,7 +189,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         if (passwordEncoder.matches(passwordDto.getPassword(), existingUser.getPassword())) {
             existingUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-            return new AppUserResponseDTO(userRepository.save(existingUser));
+            return UserMappers.toAppUserResponseDTO(userRepository.save(existingUser));
         } else {
             throw new BadRequestException("Password");
         }

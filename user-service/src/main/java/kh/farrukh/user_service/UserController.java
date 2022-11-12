@@ -1,18 +1,17 @@
 package kh.farrukh.user_service;
 
 import kh.farrukh.common.paging.PagingResponse;
-import kh.farrukh.user_service.payloads.AppUserRequestDTO;
-import kh.farrukh.user_service.payloads.AppUserResponseDTO;
-import kh.farrukh.user_service.payloads.UserPasswordRequestDTO;
-import kh.farrukh.user_service.payloads.UserRoleRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.AppUserRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.AppUserResponseDTO;
+import kh.farrukh.feign_clients.user.payloads.UserPasswordRequestDTO;
+import kh.farrukh.feign_clients.user.payloads.UserRoleRequestDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.user_service.Constants.*;
+import static kh.farrukh.feign_clients.user.UserConstants.*;
 
 /**
  * Controller that exposes endpoints for managing users
@@ -33,10 +32,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<PagingResponse<AppUserResponseDTO>> getUsers(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "page_size", defaultValue = "10") int pageSize
+            @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
+            @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
-        return new ResponseEntity<>(userService.getUsers(page, pageSize), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getUsers(page, pageSize));
     }
 
     /**
@@ -45,14 +44,14 @@ public class UserController {
      * @param id The id of the user you want to get.
      * @return A ResponseEntity with found AppUser.
      */
-    @GetMapping("{id}")
-    public ResponseEntity<AppUserResponseDTO> getUserById(@PathVariable long id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    @GetMapping(ENDPOINT_POSTFIX_ID)
+    public ResponseEntity<AppUserResponseDTO> getUserById(@PathVariable(PARAM_ID) long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
     public ResponseEntity<AppUserResponseDTO> createUser(@RequestBody AppUserRequestDTO userRequestDTO) {
-        return new ResponseEntity<>(userService.createUser(userRequestDTO), HttpStatus.OK);
+        return ResponseEntity.ok(userService.createUser(userRequestDTO));
     }
 
     /**
@@ -62,9 +61,12 @@ public class UserController {
      * @param appUserDto The user values that we want to update.
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
-    @PutMapping("{id}")
-    public ResponseEntity<AppUserResponseDTO> updateUser(@PathVariable long id, @Valid @RequestBody AppUserRequestDTO appUserDto) {
-        return new ResponseEntity<>(userService.updateUser(id, appUserDto), HttpStatus.OK);
+    @PutMapping(ENDPOINT_POSTFIX_ID)
+    public ResponseEntity<AppUserResponseDTO> updateUser(
+            @PathVariable(PARAM_ID) long id,
+            @Valid @RequestBody AppUserRequestDTO appUserDto
+    ) {
+        return ResponseEntity.ok(userService.updateUser(id, appUserDto));
     }
 
     /**
@@ -73,10 +75,10 @@ public class UserController {
      * @param id The id of the user to delete
      * @return A ResponseEntity with HttpStatus.
      */
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+    @DeleteMapping(ENDPOINT_POSTFIX_ID)
+    public ResponseEntity<Void> deleteUser(@PathVariable(PARAM_ID) long id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -89,10 +91,10 @@ public class UserController {
      */
     @PatchMapping(ENDPOINT_POSTFIX_USER_ROLE)
     public ResponseEntity<AppUserResponseDTO> setUserRole(
-            @PathVariable long id,
+            @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody UserRoleRequestDTO roleDto
     ) {
-        return new ResponseEntity<>(userService.setUserRole(id, roleDto), HttpStatus.OK);
+        return ResponseEntity.ok(userService.setUserRole(id, roleDto));
     }
 
     /**
@@ -120,9 +122,9 @@ public class UserController {
      */
     @PatchMapping(ENDPOINT_POSTFIX_USER_PASSWORD)
     public ResponseEntity<AppUserResponseDTO> setUserPassword(
-            @PathVariable long id,
+            @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody UserPasswordRequestDTO passwordDto
     ) {
-        return new ResponseEntity<>(userService.setUserPassword(id, passwordDto), HttpStatus.OK);
+        return ResponseEntity.ok(userService.setUserPassword(id, passwordDto));
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static kh.farrukh.feign_clients.stats.Constants.*;
+import static kh.farrukh.feign_clients.stats.StatsConstants.*;
 
 @FeignClient(name = "stats-service", path = ENDPOINT_STATS)
 public interface StatsClient {

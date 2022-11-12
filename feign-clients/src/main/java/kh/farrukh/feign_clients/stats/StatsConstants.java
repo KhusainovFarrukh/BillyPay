@@ -1,6 +1,6 @@
 package kh.farrukh.feign_clients.stats;
 
-public class Constants {
+public class StatsConstants {
 
     public static final String ENDPOINT_STATS = "/api/v1/stats";
     public static final String ENDPOINT_POSTFIX_OF_BILL = "of-bill";

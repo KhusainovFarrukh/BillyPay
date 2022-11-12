@@ -1,4 +1,4 @@
-package kh.farrukh.user_service.payloads;
+package kh.farrukh.feign_clients.user.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

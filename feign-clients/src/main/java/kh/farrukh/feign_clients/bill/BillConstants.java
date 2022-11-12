@@ -1,6 +1,6 @@
 package kh.farrukh.feign_clients.bill;
 
-public class Constants {
+public class BillConstants {
 
     public static final String ENDPOINT_BILL = "/api/v1/bills";
     public static final String ENDPOINT_POSTFIX_ID = "{id}";

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static kh.farrukh.feign_clients.bill.Constants.*;
+import static kh.farrukh.feign_clients.bill.BillConstants.*;
 
 @RestController
 @RequestMapping(ENDPOINT_BILL)

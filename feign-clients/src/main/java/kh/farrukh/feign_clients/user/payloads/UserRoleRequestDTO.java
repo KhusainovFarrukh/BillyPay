@@ -1,13 +1,10 @@
-package kh.farrukh.user_service.payloads;
+package kh.farrukh.feign_clients.user.payloads;
 
-import kh.farrukh.user_service.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,6 +17,5 @@ import javax.validation.constraints.NotNull;
 public class UserRoleRequestDTO {
 
     @NotNull(message = "Role must not be null")
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRoleDTO role;
 }
