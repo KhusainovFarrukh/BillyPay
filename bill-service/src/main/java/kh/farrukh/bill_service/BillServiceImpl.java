@@ -15,6 +15,7 @@ import kh.farrukh.feign_clients.stats.StatsClient;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import kh.farrukh.feign_clients.user.UserClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BillServiceImpl implements BillService {
@@ -159,6 +161,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponseDTO updateBill(long id, BillRequestDTO billRequestDTO) {
+        log.info("Updating bill with id {}", id);
         Bill existingBill = billRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bill", "id", id));
 
@@ -173,6 +176,7 @@ public class BillServiceImpl implements BillService {
         }
 
         if (!billRequestDTO.getPrice().equals(existingBill.getPrice())) {
+            log.info("Price of bill with id {} has been changed", id);
             statsClient.updateTotalPriceOfStatsByBillId(id, billRequestDTO.getPrice());
             notificationClient.sendNotification(
                     new NotificationRequestDTO(

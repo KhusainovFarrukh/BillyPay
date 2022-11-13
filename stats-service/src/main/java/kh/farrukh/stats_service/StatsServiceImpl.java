@@ -10,6 +10,7 @@ import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import kh.farrukh.feign_clients.stats.payloads.StatsRequestDTO;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
@@ -157,6 +159,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public void updateTotalPriceOfStatsByBillId(long billId, Double price) {
+        log.info("Updating total price of stats by bill id: {}", billId);
         statsRepository.updateTotalPriceByBillId(billId, price);
     }
 }

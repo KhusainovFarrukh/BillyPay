@@ -6,10 +6,12 @@ import kh.farrukh.feign_clients.notification.payloads.NotificationRequestDTO;
 import kh.farrukh.feign_clients.notification.payloads.NotificationResponseDTO;
 import kh.farrukh.feign_clients.user.UserClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
@@ -26,8 +28,9 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         // TODO: 11/12/22 implement real notification sending
-        Notification notification = notificationRepository.save(NotificationMappers.toNotification(notificationRequestDTO));
+        Notification notification = NotificationMappers.toNotification(notificationRequestDTO);
         notification.setSentAt(LocalDateTime.now());
-        return NotificationMappers.toNotificationResponseDTO(notification);
+        log.info("Notification sent at: {}", notification.getSentAt());
+        return NotificationMappers.toNotificationResponseDTO(notificationRepository.save(notification));
     }
 }
