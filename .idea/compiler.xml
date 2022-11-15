@@ -12,6 +12,7 @@
         <module name="discovery-server" />
         <module name="common" />
         <module name="stats-service" />
+        <module name="api-gateway" />
         <module name="user-service" />
         <module name="bill-service" />
         <module name="notification-service" />
@@ -23,6 +24,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
