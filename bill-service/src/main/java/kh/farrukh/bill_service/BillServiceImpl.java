@@ -1,6 +1,7 @@
 package kh.farrukh.bill_service;
 
 import feign.FeignException;
+import kh.farrukh.amqp.RabbitMQMessageProducer;
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
 import kh.farrukh.common.exceptions.exceptions.ResourceNotFoundException;
@@ -9,7 +10,6 @@ import kh.farrukh.feign_clients.bill.payloads.BillRequestDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
-import kh.farrukh.feign_clients.notification.NotificationClient;
 import kh.farrukh.feign_clients.notification.payloads.NotificationRequestDTO;
 import kh.farrukh.feign_clients.stats.StatsClient;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
@@ -35,7 +35,8 @@ public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
     private final StatsClient statsClient;
     private final UserClient userClient;
-    private final NotificationClient notificationClient;
+    //    private final NotificationClient notificationClient;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
@@ -178,12 +179,11 @@ public class BillServiceImpl implements BillService {
         if (!billRequestDTO.getPrice().equals(existingBill.getPrice())) {
             log.info("Price of bill with id {} has been changed", id);
             statsClient.updateTotalPriceOfStatsByBillId(id, billRequestDTO.getPrice());
-            notificationClient.sendNotification(
-                    new NotificationRequestDTO(
-                            "Price of bill with account number " + existingBill.getAccountNumber() + " was changed from " + existingBill.getPrice() + " to " + billRequestDTO.getPrice(),
-                            existingBill.getOwnerId()
-                    )
+            NotificationRequestDTO notificationRequestDTO = new NotificationRequestDTO(
+                    "Price of bill with account number " + existingBill.getAccountNumber() + " was changed from " + existingBill.getPrice() + " to " + billRequestDTO.getPrice(),
+                    existingBill.getOwnerId()
             );
+            rabbitMQMessageProducer.sendNotificationMessage(notificationRequestDTO);
         }
 
         existingBill.setAddress(billRequestDTO.getAddress());

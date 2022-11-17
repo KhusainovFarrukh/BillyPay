@@ -19,6 +19,7 @@
         <option value="$PROJECT_DIR$/feign-clients/pom.xml" />
         <option value="$PROJECT_DIR$/notification-service/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/amqp/pom.xml" />
       </list>
     </option>
   </component>

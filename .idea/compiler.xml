@@ -11,6 +11,7 @@
         <module name="config-server" />
         <module name="discovery-server" />
         <module name="common" />
+        <module name="amqp" />
         <module name="stats-service" />
         <module name="api-gateway" />
         <module name="user-service" />
@@ -24,6 +25,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="amqp" options="" />
       <module name="api-gateway" options="-parameters" />
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />

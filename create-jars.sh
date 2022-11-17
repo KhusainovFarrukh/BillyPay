@@ -4,6 +4,9 @@ mvn clean package -DskipTests
 cd ../discovery-server
 mvn clean package -DskipTests
 
+cd ../api-gateway
+mvn clean package -DskipTests
+
 cd ../bill-service
 mvn clean package -DskipTests
 

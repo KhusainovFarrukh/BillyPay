@@ -5,7 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "kh.farrukh.bill_service",
+        "kh.farrukh.amqp"
+})
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "kh.farrukh.feign_clients")
 public class BillServiceApplication {
