@@ -1,4 +1,4 @@
-package kh.farrukh.auth_service.security;
+package kh.farrukh.auth_service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class PasswordEncoderConfiguration {
+public class AuthServiceConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
