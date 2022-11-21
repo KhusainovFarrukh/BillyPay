@@ -10,5 +10,16 @@ public enum Permission {
     ROLE_POST,
     ROLE_PUT,
     ROLE_PATCH,
-    ROLE_DELETE
+    ROLE_DELETE,
+    BILL_GET,
+    BILL_POST,
+    BILL_PUT,
+    BILL_PATCH,
+    BILL_DELETE,
+    STATS_GET,
+    STATS_POST,
+    STATS_PUT,
+    STATS_PATCH,
+    STATS_DELETE,
+
 }
