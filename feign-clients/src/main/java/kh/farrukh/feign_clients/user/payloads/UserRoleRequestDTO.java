@@ -1,5 +1,6 @@
 package kh.farrukh.feign_clients.user.payloads;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UserRoleRequestDTO {
 
-    @NotNull(message = "Role must not be null")
-    private UserRoleDTO role;
+    @JsonProperty("role_id")
+    @NotNull(message = "Role id must not be null")
+    private Long roleId;
 }

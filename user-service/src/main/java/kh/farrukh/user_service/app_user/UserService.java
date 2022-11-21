@@ -1,4 +1,4 @@
-package kh.farrukh.user_service;
+package kh.farrukh.user_service.app_user;
 
 import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.feign_clients.user.payloads.AppUserRequestDTO;

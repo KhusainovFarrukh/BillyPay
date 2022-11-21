@@ -1,4 +1,4 @@
-package kh.farrukh.user_service;
+package kh.farrukh.user_service.app_user;
 
 import kh.farrukh.common.exceptions.exceptions.BadRequestException;
 import kh.farrukh.common.exceptions.exceptions.DuplicateResourceException;
@@ -8,6 +8,7 @@ import kh.farrukh.feign_clients.user.payloads.AppUserRequestDTO;
 import kh.farrukh.feign_clients.user.payloads.AppUserResponseDTO;
 import kh.farrukh.feign_clients.user.payloads.UserPasswordRequestDTO;
 import kh.farrukh.feign_clients.user.payloads.UserRoleRequestDTO;
+import kh.farrukh.user_service.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ import static kh.farrukh.common.paging.PageChecker.checkPageNumber;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateResourceException("User", "phone number", userRequestDTO.getPhoneNumber());
         }
 
-        return UserMappers.toAppUserResponseDTO(userRepository.save(UserMappers.toAppUser(userRequestDTO)));
+        return UserMappers.toAppUserResponseDTO(userRepository.save(UserMappers.toAppUser(userRequestDTO, roleRepository)));
     }
 
     /**
@@ -143,7 +145,8 @@ public class UserServiceImpl implements UserService {
     public AppUserResponseDTO setUserRole(long id, UserRoleRequestDTO roleDto) {
         AppUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-        user.setRole(UserMappers.toUserRole(roleDto.getRole()));
+        user.setRole(roleRepository.findById(roleDto.getRoleId())
+                .orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleDto.getRoleId())));
         return UserMappers.toAppUserResponseDTO(userRepository.save(user));
     }
 

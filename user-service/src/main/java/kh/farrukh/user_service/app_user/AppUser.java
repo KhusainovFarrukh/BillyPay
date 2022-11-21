@@ -1,7 +1,8 @@
-package kh.farrukh.user_service;
+package kh.farrukh.user_service.app_user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import kh.farrukh.user_service.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,8 +45,11 @@ public class AppUser {
     @Column
     private boolean isLocked = false;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role = UserRole.USER;
+//    @Enumerated(EnumType.STRING)
+//    private UserRole role = UserRole.USER;
+
+    @ManyToOne(optional = false)
+    private Role role;
 
 //    @ManyToOne
 //    @JoinColumn(
