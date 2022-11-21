@@ -49,6 +49,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping(ENDPOINT_SEARCH_BY_USERNAME)
+    public ResponseEntity<AppUserResponseDTO> searchUserByUsername(@RequestParam(PARAM_PHONE_NUMBER) String phoneNumber) {
+        return ResponseEntity.ok(userService.searchUserByPhoneNumber(phoneNumber));
+    }
+
     @PostMapping
     public ResponseEntity<AppUserResponseDTO> createUser(@RequestBody AppUserRequestDTO userRequestDTO) {
         return ResponseEntity.ok(userService.createUser(userRequestDTO));

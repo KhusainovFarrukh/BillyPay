@@ -24,6 +24,9 @@ public interface UserClient {
     @GetMapping(ENDPOINT_POSTFIX_ID)
     AppUserResponseDTO getUserById(@PathVariable(PARAM_ID) long id);
 
+    @GetMapping(ENDPOINT_SEARCH_BY_USERNAME)
+    AppUserResponseDTO searchUserByUsername(@RequestParam(PARAM_PHONE_NUMBER) String phoneNumber);
+
     @PostMapping
     AppUserResponseDTO createUser(@RequestBody AppUserRequestDTO userRequestDTO);
 

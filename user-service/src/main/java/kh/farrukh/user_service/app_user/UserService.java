@@ -17,6 +17,8 @@ public interface UserService {
 
     AppUserResponseDTO getUserById(Long id);
 
+    AppUserResponseDTO searchUserByPhoneNumber(String phoneNumber);
+
     AppUserResponseDTO createUser(AppUserRequestDTO userRequestDTO);
 
     AppUserResponseDTO updateUser(long id, AppUserRequestDTO userRequestDTO);

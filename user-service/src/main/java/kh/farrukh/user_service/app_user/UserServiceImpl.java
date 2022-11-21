@@ -74,6 +74,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public AppUserResponseDTO searchUserByPhoneNumber(String phoneNumber) {
+        AppUser appUser = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "phone number", phoneNumber));
+
+        AppUserResponseDTO appUserResponseDTO = UserMappers.toAppUserResponseDTO(appUser);
+        appUserResponseDTO.setEncodedPassword(appUser.getPassword());
+        return appUserResponseDTO;
+    }
+
+    @Override
     public AppUserResponseDTO createUser(AppUserRequestDTO userRequestDTO) {
         if (userRepository.existsByPhoneNumber(userRequestDTO.getPhoneNumber())) {
             throw new DuplicateResourceException("User", "phone number", userRequestDTO.getPhoneNumber());

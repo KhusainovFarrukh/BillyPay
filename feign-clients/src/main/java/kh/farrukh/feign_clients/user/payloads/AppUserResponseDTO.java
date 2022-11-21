@@ -30,4 +30,7 @@ public class AppUserResponseDTO {
     private boolean isLocked = false;
 
     private RoleResponseDTO role;
+
+    @JsonProperty("encoded_password")
+    private String encodedPassword;
 }
