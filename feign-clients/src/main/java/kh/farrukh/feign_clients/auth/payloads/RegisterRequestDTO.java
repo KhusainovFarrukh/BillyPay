@@ -1,17 +1,19 @@
-package kh.farrukh.feign_clients.user.payloads;
+package kh.farrukh.feign_clients.auth.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class AppUserRequestDTO {
+@AllArgsConstructor
+public class RegisterRequestDTO {
 
     @NotBlank
     private String name;
@@ -27,6 +29,6 @@ public class AppUserRequestDTO {
 //    @JsonProperty("image_id")
 //    private Long imageId;
 
-    // TODO: 8/26/22 separate DTOs for create and update
+    @NotBlank
     private String password;
 }

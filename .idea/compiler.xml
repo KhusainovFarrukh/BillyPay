@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="feign-clients" />
         <module name="config-server" />
+        <module name="auth-service" />
         <module name="discovery-server" />
         <module name="common" />
         <module name="amqp" />
@@ -27,6 +28,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="amqp" options="" />
       <module name="api-gateway" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
       <module name="bill-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
