@@ -1,5 +1,6 @@
 package kh.farrukh.feign_clients.auth.payloads;
 
+import kh.farrukh.common.security.TokenResponseDTO;
 import kh.farrukh.feign_clients.user.payloads.AppUserResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,6 @@ public class RegisterResponseDTO {
 
     private AppUserResponseDTO user;
 
-    // TODO: 11/21/22 implement returning token
-//    private TokenResponseDTO token;
+    private TokenResponseDTO token;
 
 }
