@@ -1,4 +1,4 @@
-package kh.farrukh.bill_service.security;
+package kh.farrukh.stats_service.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import kh.farrukh.common.security.TokenProvider;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static kh.farrukh.common.security.TokenProvider.KEY_PERMISSIONS;
 
-// TODO: 11/22/22 move to common module and remove from each service
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -35,7 +34,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     decodedJWT.getSubject(),
                     null,
-                    // TODO: 11/22/22 get permissions from user-service, because it can be changed
                     decodedJWT.getClaim(KEY_PERMISSIONS).asList(String.class)
                             .stream().map(SimpleGrantedAuthority::new).toList()
             );
