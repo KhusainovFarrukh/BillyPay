@@ -9,6 +9,7 @@ import java.util.List;
 public interface StatsService {
 
     PagingResponse<StatsResponseDTO> getStatsList(
+            String token,
             Long billId,
             int pageNumber,
             int pageSize
@@ -18,13 +19,13 @@ public interface StatsService {
 
     StatsResponseDTO getStatsById(long id);
 
-    StatsResponseDTO addStats(StatsRequestDTO statsRequestDTO);
+    StatsResponseDTO addStats(String token, StatsRequestDTO statsRequestDTO);
 
-    StatsResponseDTO updateStats(long id, StatsRequestDTO statsRequestDTO);
+    StatsResponseDTO updateStats(String token, long id, StatsRequestDTO statsRequestDTO);
 
     void deleteStatsById(long id);
 
-    void deleteStatsByBillId(long billId);
+    void deleteStatsByBillId(String token, long billId);
 
     void updateTotalPriceOfStatsByBillId(long billId, Double price);
 }

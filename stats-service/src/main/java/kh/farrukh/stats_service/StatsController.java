@@ -4,6 +4,7 @@ import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.feign_clients.stats.payloads.StatsRequestDTO;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,12 @@ public class StatsController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<StatsResponseDTO>> getStatsList(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_BILL_ID, required = false) Long billId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
-        return ResponseEntity.ok(statsService.getStatsList(billId, page, pageSize));
+        return ResponseEntity.ok(statsService.getStatsList(token, billId, page, pageSize));
     }
 
     @GetMapping(ENDPOINT_POSTFIX_OF_BILL)
@@ -42,16 +44,20 @@ public class StatsController {
     }
 
     @PostMapping
-    public ResponseEntity<StatsResponseDTO> addStats(@Valid @RequestBody StatsRequestDTO statsDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(statsService.addStats(statsDto));
+    public ResponseEntity<StatsResponseDTO> addStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody StatsRequestDTO statsDto
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(statsService.addStats(token, statsDto));
     }
 
     @PutMapping(ENDPOINT_POSTFIX_ID)
     public ResponseEntity<StatsResponseDTO> updateStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody StatsRequestDTO statsDto
     ) {
-        return ResponseEntity.ok(statsService.updateStats(id, statsDto));
+        return ResponseEntity.ok(statsService.updateStats(token, id, statsDto));
     }
 
     @DeleteMapping(ENDPOINT_POSTFIX_ID)
@@ -61,8 +67,11 @@ public class StatsController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteStatsByBillId(@RequestParam(PARAM_BILL_ID) long billId) {
-        statsService.deleteStatsByBillId(billId);
+    public ResponseEntity<Void> deleteStatsByBillId(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam(PARAM_BILL_ID) long billId
+    ) {
+        statsService.deleteStatsByBillId(token, billId);
         return ResponseEntity.noContent().build();
     }
 

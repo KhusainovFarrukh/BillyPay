@@ -195,7 +195,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void deleteBillById(long id) {
+    public void deleteBillById(String token, long id) {
         if (!billRepository.existsById(id)) throw new ResourceNotFoundException("Bill", "id", id);
 
         // TODO: 8/18/22 check user
@@ -203,7 +203,7 @@ public class BillServiceImpl implements BillService {
 //            throw new NotEnoughPermissionException();
 //        }
 
-        statsClient.deleteStatsByBillId(id);
+        statsClient.deleteStatsByBillId(token, id);
 
         billRepository.deleteById(id);
     }

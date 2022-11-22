@@ -29,6 +29,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public PagingResponse<StatsResponseDTO> getStatsList(
+            String token,
             Long billId,
             int page,
             int pageSize
@@ -40,7 +41,7 @@ public class StatsServiceImpl implements StatsService {
             ).map(StatsMappers::toStatsResponseDTO));
         } else {
             try {
-                billClient.getBillById(billId);
+                billClient.getBillById(token, billId);
             } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
                 throw new ResourceNotFoundException("Bill", "id", billId);
             }
@@ -87,11 +88,11 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public StatsResponseDTO addStats(StatsRequestDTO statsRequestDTO) {
+    public StatsResponseDTO addStats(String token, StatsRequestDTO statsRequestDTO) {
         if (statsRequestDTO.getBillId() == null) throw new BadRequestException("Bill ID");
         BillResponseDTO bill;
         try {
-            bill = billClient.getBillById(statsRequestDTO.getBillId());
+            bill = billClient.getBillById(token, statsRequestDTO.getBillId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", statsRequestDTO.getBillId());
         }
@@ -105,13 +106,13 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public StatsResponseDTO updateStats(long id, StatsRequestDTO statsRequestDTO) {
+    public StatsResponseDTO updateStats(String token, long id, StatsRequestDTO statsRequestDTO) {
         Stats existingStats = statsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Stats", "id", id));
 
         BillResponseDTO bill;
         try {
-            bill = billClient.getBillById(existingStats.getBillId());
+            bill = billClient.getBillById(token, existingStats.getBillId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", existingStats.getBillId());
         }
@@ -148,9 +149,9 @@ public class StatsServiceImpl implements StatsService {
     @Override
     // TODO: 11/10/22 why transactional?
     @Transactional
-    public void deleteStatsByBillId(long billId) {
+    public void deleteStatsByBillId(String token, long billId) {
         try {
-            billClient.getBillById(billId);
+            billClient.getBillById(token, billId);
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             throw new ResourceNotFoundException("Bill", "id", billId);
         }

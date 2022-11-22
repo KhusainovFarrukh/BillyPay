@@ -4,6 +4,7 @@ import kh.farrukh.common.paging.PagingResponse;
 import kh.farrukh.feign_clients.stats.payloads.StatsRequestDTO;
 import kh.farrukh.feign_clients.stats.payloads.StatsResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ public interface StatsClient {
 
     @GetMapping
     PagingResponse<StatsResponseDTO> getStatsList(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_BILL_ID, required = false) Long billId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
@@ -28,10 +30,14 @@ public interface StatsClient {
     StatsResponseDTO getStatsById(@PathVariable(PARAM_ID) long id);
 
     @PostMapping
-    StatsResponseDTO addStats(@Valid @RequestBody StatsRequestDTO statsDto);
+    StatsResponseDTO addStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody StatsRequestDTO statsDto
+    );
 
     @PutMapping(ENDPOINT_POSTFIX_ID)
     StatsResponseDTO updateStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(PARAM_ID) long id,
             @Valid @RequestBody StatsRequestDTO statsDto
     );
@@ -40,7 +46,10 @@ public interface StatsClient {
     void deleteStats(@PathVariable(PARAM_ID) long id);
 
     @DeleteMapping
-    void deleteStatsByBillId(@RequestParam(PARAM_BILL_ID) long billId);
+    void deleteStatsByBillId(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam(PARAM_BILL_ID) long billId
+    );
 
     @PutMapping
     void updateTotalPriceOfStatsByBillId(

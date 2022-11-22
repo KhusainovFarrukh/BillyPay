@@ -6,6 +6,7 @@ import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +31,10 @@ public interface BillClient {
     );
 
     @GetMapping(ENDPOINT_POSTFIX_ID)
-    BillResponseDTO getBillById(@PathVariable(PARAM_ID) long id);
+    BillResponseDTO getBillById(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable(PARAM_ID) long id
+    );
 
     @PostMapping
     BillResponseDTO addBill(@Valid @RequestBody BillRequestDTO billDto);
@@ -54,5 +58,8 @@ public interface BillClient {
     );
 
     @DeleteMapping(ENDPOINT_POSTFIX_ID)
-    void deleteBill(@PathVariable(PARAM_ID) long id);
+    void deleteBill(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable(PARAM_ID) long id
+    );
 }

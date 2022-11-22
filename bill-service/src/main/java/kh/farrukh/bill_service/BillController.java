@@ -6,6 +6,7 @@ import kh.farrukh.feign_clients.bill.payloads.BillResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.BillWithStatsResponseDTO;
 import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,9 +80,10 @@ public class BillController {
 
     @DeleteMapping(ENDPOINT_POSTFIX_ID)
     public ResponseEntity<Void> deleteBill(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(PARAM_ID) long id
     ) {
-        billService.deleteBillById(id);
+        billService.deleteBillById(token, id);
         return ResponseEntity.noContent().build();
     }
 }

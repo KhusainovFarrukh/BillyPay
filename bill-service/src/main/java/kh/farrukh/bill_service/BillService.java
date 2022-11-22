@@ -26,7 +26,7 @@ public interface BillService {
 
     BillResponseDTO updateBill(long id, BillRequestDTO billRequestDTO);
 
-    void deleteBillById(long id);
+    void deleteBillById(String token, long id);
 
     BillResponseDTO addStatsToBill(long id, StatsIdDTO statsIdDTO);
 
