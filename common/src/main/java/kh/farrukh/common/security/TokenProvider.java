@@ -96,7 +96,7 @@ public class TokenProvider implements InitializingBean {
         return JWT.create()
                 .withSubject(phoneNumber)
                 .withExpiresAt(Date.from(expireDate.toInstant()))
-                .withClaim(KEY_PERMISSIONS, permissions)
+                .withClaim(KEY_PERMISSIONS, permissions.stream().map(Enum::name).toList())
                 .sign(algorithm);
     }
 }

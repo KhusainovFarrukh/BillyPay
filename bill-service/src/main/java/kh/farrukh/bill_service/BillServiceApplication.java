@@ -7,7 +7,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {
         "kh.farrukh.bill_service",
-        "kh.farrukh.amqp"
+        "kh.farrukh.amqp",
+        "kh.farrukh.common"
 })
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "kh.farrukh.feign_clients")
