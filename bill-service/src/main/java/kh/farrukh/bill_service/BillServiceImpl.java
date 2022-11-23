@@ -41,6 +41,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public PagingResponse<BillResponseDTO> getBills(
+            String token,
             Long ownerId,
             int page,
             int pageSize
@@ -54,7 +55,7 @@ public class BillServiceImpl implements BillService {
             ).map(BillMappers::toBillResponseDTO));
         } else {
             try {
-                userClient.getUserById(ownerId);
+                userClient.getUserById(token, ownerId);
             } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
                 // TODO: 11/9/22 make it  work with circuit breaker
                 throw new ResourceNotFoundException("User", "id", ownerId);
@@ -77,6 +78,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
+            String token,
             Long ownerId,
             int page,
             int pageSize
@@ -89,7 +91,7 @@ public class BillServiceImpl implements BillService {
             billsPage = billRepository.findAll(PageRequest.of(page - 1, pageSize));
         } else {
             try {
-                userClient.getUserById(ownerId);
+                userClient.getUserById(token, ownerId);
             } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
                 // TODO: 11/9/22 make it  work with circuit breaker
                 throw new ResourceNotFoundException("User", "id", ownerId);
@@ -141,11 +143,11 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public BillResponseDTO addBill(BillRequestDTO billRequestDTO) {
+    public BillResponseDTO addBill(String token, BillRequestDTO billRequestDTO) {
         // TODO: 8/18/22 check user
         if (billRequestDTO.getOwnerId() == null) throw new BadRequestException("Owner ID");
         try {
-            userClient.getUserById(billRequestDTO.getOwnerId());
+            userClient.getUserById(token, billRequestDTO.getOwnerId());
         } catch (FeignException.NotFound | FeignException.ServiceUnavailable e) {
             // TODO: 11/9/22 make it  work with circuit breaker
             throw new ResourceNotFoundException("User", "id", billRequestDTO.getOwnerId());

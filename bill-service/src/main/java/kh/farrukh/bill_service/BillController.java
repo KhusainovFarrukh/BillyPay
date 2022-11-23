@@ -24,20 +24,22 @@ public class BillController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<BillResponseDTO>> getBills(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
-        return ResponseEntity.ok(billService.getBills(ownerId, page, pageSize));
+        return ResponseEntity.ok(billService.getBills(token, ownerId, page, pageSize));
     }
 
     @GetMapping(ENDPOINT_POSTFIX_GET_BILLS_WITH_STATS)
     public ResponseEntity<PagingResponse<BillWithStatsResponseDTO>> getBillsWithStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
     ) {
-        return ResponseEntity.ok(billService.getBillsWithStats(ownerId, page, pageSize));
+        return ResponseEntity.ok(billService.getBillsWithStats(token, ownerId, page, pageSize));
     }
 
     @GetMapping(ENDPOINT_POSTFIX_ID)
@@ -49,9 +51,10 @@ public class BillController {
 
     @PostMapping
     public ResponseEntity<BillResponseDTO> addBill(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @Valid @RequestBody BillRequestDTO billDto
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(billService.addBill(billDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(billService.addBill(token, billDto));
     }
 
     @PostMapping(ENDPOINT_POSTFIX_ADD_STATS_TO_BILL)

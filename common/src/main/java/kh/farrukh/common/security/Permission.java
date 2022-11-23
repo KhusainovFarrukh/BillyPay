@@ -2,7 +2,7 @@ package kh.farrukh.common.security;
 
 public enum Permission {
     USER_GET,
-    USER_POST,
+//    USER_POST,
     USER_PUT,
     USER_PATCH,
     USER_DELETE,

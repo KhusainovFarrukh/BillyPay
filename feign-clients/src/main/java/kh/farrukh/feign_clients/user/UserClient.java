@@ -6,6 +6,7 @@ import kh.farrukh.feign_clients.user.payloads.AppUserResponseDTO;
 import kh.farrukh.feign_clients.user.payloads.UserPasswordRequestDTO;
 import kh.farrukh.feign_clients.user.payloads.UserRoleRequestDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,6 +16,8 @@ import static kh.farrukh.feign_clients.user.UserConstants.*;
 @FeignClient(name = "user-service", path = ENDPOINT_USER)
 public interface UserClient {
 
+//    todo: secure the methods which are used in other services
+
     @GetMapping
     PagingResponse<AppUserResponseDTO> getUsers(
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
@@ -22,13 +25,18 @@ public interface UserClient {
     );
 
     @GetMapping(ENDPOINT_POSTFIX_ID)
-    AppUserResponseDTO getUserById(@PathVariable(PARAM_ID) long id);
+    AppUserResponseDTO getUserById(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable(PARAM_ID) long id
+    );
 
-    @GetMapping(ENDPOINT_SEARCH_BY_USERNAME)
+    @GetMapping(ENDPOINT_POSTFIX_SEARCH_BY_USERNAME)
     AppUserResponseDTO searchUserByUsername(@RequestParam(PARAM_PHONE_NUMBER) String phoneNumber);
 
     @PostMapping
-    AppUserResponseDTO createUser(@RequestBody AppUserRequestDTO userRequestDTO);
+    AppUserResponseDTO createUser(
+            @RequestBody AppUserRequestDTO userRequestDTO
+    );
 
     @PutMapping(ENDPOINT_POSTFIX_ID)
     AppUserResponseDTO updateUser(
@@ -37,7 +45,7 @@ public interface UserClient {
     );
 
     @DeleteMapping(ENDPOINT_POSTFIX_ID)
-    Void deleteUser(@PathVariable(PARAM_ID) long id);
+    void deleteUser(@PathVariable(PARAM_ID) long id);
 
     @PatchMapping(ENDPOINT_POSTFIX_USER_ROLE)
     AppUserResponseDTO setUserRole(

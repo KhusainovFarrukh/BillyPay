@@ -4,7 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "kh.farrukh.user_service",
+        "kh.farrukh.common"
+})
 @EnableEurekaClient
 public class UserServiceApplication {
 

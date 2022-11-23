@@ -18,6 +18,7 @@ public interface BillClient {
 
     @GetMapping
     PagingResponse<BillResponseDTO> getBills(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
@@ -25,6 +26,7 @@ public interface BillClient {
 
     @GetMapping(ENDPOINT_POSTFIX_GET_BILLS_WITH_STATS)
     PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestParam(name = PARAM_OWNER_ID, required = false) Long ownerId,
             @RequestParam(name = PARAM_PAGE, defaultValue = "1") int page,
             @RequestParam(name = PARAM_PAGE_SIZE, defaultValue = "10") int pageSize
@@ -37,7 +39,10 @@ public interface BillClient {
     );
 
     @PostMapping
-    BillResponseDTO addBill(@Valid @RequestBody BillRequestDTO billDto);
+    BillResponseDTO addBill(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody BillRequestDTO billDto
+    );
 
     @PostMapping(ENDPOINT_POSTFIX_ADD_STATS_TO_BILL)
     BillResponseDTO addStatsToBill(

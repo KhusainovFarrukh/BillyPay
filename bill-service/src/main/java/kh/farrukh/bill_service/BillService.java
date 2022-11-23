@@ -9,12 +9,14 @@ import kh.farrukh.feign_clients.bill.payloads.StatsIdDTO;
 public interface BillService {
 
     PagingResponse<BillResponseDTO> getBills(
+            String token,
             Long ownerId,
             int pageNumber,
             int pageSize
     );
 
     PagingResponse<BillWithStatsResponseDTO> getBillsWithStats(
+            String token,
             Long ownerId,
             int pageNumber,
             int pageSize
@@ -22,7 +24,7 @@ public interface BillService {
 
     BillResponseDTO getBillById(long id);
 
-    BillResponseDTO addBill(BillRequestDTO billRequestDTO);
+    BillResponseDTO addBill(String token, BillRequestDTO billRequestDTO);
 
     BillResponseDTO updateBill(long id, BillRequestDTO billRequestDTO);
 
